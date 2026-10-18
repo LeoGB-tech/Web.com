@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Ancre">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/icon-192.png">
+<title>Ancre</title>
+<style>
+:root{
+  --bg:#f3efe6; --paper:#fbf9f4; --ink:#1d1b18; --ink2:#3a3631; --mute:#746c60; --faint:#a59d90;
+  --line:#ddd5c6; --line2:#cbc2b1; --acc:#c2410c; --acc-soft:#f6e1d3; --ok:#3f7d4e; --warn:#a16207; --err:#b42318;
+  --shadow:0 1px 0 rgba(29,27,24,.04),0 12px 28px -18px rgba(29,27,24,.35);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px);
+  --sl:env(safe-area-inset-left,0px); --sr:env(safe-area-inset-right,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){
+  --bg:#121110; --paper:#1b1a18; --ink:#efe9dd; --ink2:#d6cfc1; --mute:#a0978a; --faint:#6f685e;
+  --line:#2c2925; --line2:#3c3833; --acc:#fb8c4c; --acc-soft:#3a2113; --ok:#7cc48c; --warn:#e3b341; --err:#f97066;
+  --shadow:0 1px 0 rgba(0,0,0,.3),0 14px 30px -20px rgba(0,0,0,.8); color-scheme:dark;
+}}
+:root[data-theme=dark]{
+  --bg:#121110; --paper:#1b1a18; --ink:#efe9dd; --ink2:#d6cfc1; --mute:#a0978a; --faint:#6f685e;
+  --line:#2c2925; --line2:#3c3833; --acc:#fb8c4c; --acc-soft:#3a2113; --ok:#7cc48c; --warn:#e3b341; --err:#f97066;
+  --shadow:0 1px 0 rgba(0,0,0,.3),0 14px 30px -20px rgba(0,0,0,.8); color-scheme:dark;
+}
+:root[data-theme=sepia]{ --bg:#efe3cc; --paper:#f6ecd8; --ink:#3b2f22; --ink2:#4d3f2f; --mute:#7c6a55; --faint:#a8957c; --line:#dccbab; --line2:#cdb994; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased;min-height:100dvh;padding-left:var(--sl);padding-right:var(--sr)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+[hidden]{display:none!important}
+.mono{font-family:var(--mono)}
+
+/* barre */
+.bar{position:sticky;top:0;z-index:20;padding:calc(var(--st) + 8px) 14px 8px;display:flex;align-items:center;gap:8px;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar h1{margin:0;font:600 24px/1 var(--serif);letter-spacing:-.01em;display:flex;align-items:center;gap:9px;flex:1;min-width:0}
+.bar h1 svg{width:28px;height:28px;flex:none}
+.bar .t{flex:1;min-width:0;text-align:center}
+.bar .t b{display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .t span{display:block;font:11.5px var(--mono);color:var(--mute)}
+.ib{width:42px;height:42px;border-radius:12px;border:0;background:none;display:grid;place-items:center;flex:none;color:var(--ink)}
+.ib:active{background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.ib svg{width:22px;height:22px}
+.pill{font:600 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:6px;color:var(--ok);padding:0 4px}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.off{color:var(--warn)}
+
+.page{max-width:760px;margin:0 auto;padding:18px 16px calc(var(--sb) + 110px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 18px;border-radius:13px;border:1px solid var(--line2);background:var(--paper);font-weight:600;font-size:15px;text-decoration:none;color:var(--ink)}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:18px;height:18px}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.danger{color:var(--err)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.fab{position:fixed;right:calc(18px + var(--sr));bottom:calc(18px + var(--sb));z-index:15;height:56px;padding:0 22px;border-radius:18px;box-shadow:0 14px 30px -12px rgba(0,0,0,.45)}
+
+/* bibliothèque */
+.intro{padding:6px 2px 16px}
+.intro p{margin:0;color:var(--mute);font-size:15px}
+.storage{display:flex;align-items:center;gap:10px;font:12px var(--mono);color:var(--mute);margin:4px 2px 18px}
+.storage .m{flex:1;height:5px;border-radius:9px;background:var(--line);overflow:hidden}
+.storage .m i{display:block;height:100%;background:var(--acc);border-radius:9px}
+.list{display:grid;gap:12px}
+.card{background:var(--paper);border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.card .main{display:flex;gap:14px;padding:16px;align-items:center;cursor:pointer}
+.mark{width:48px;height:48px;border-radius:13px;flex:none;display:grid;place-items:center;color:#fff;font:600 22px var(--serif);background:var(--h)}
+.card .txt{flex:1;min-width:0}
+.card h3{margin:0 0 2px;font:600 18px/1.25 var(--serif);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .meta{font:12px var(--mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .go{color:var(--faint)}
+.card .go svg{width:20px;height:20px}
+.card .foot{display:flex;align-items:center;gap:8px;padding:0 16px 14px;font:12px var(--mono);color:var(--mute)}
+.card .foot .tag{border:1px solid var(--line2);border-radius:99px;padding:2px 8px}
+.card .foot .sp{flex:1}
+.prog{height:4px;background:var(--line);border-radius:9px;overflow:hidden;margin:0 16px 14px}
+.prog i{display:block;height:100%;background:var(--acc);transition:width .5s}
+.prog.ind i{width:35%!important;animation:sl 1.2s ease-in-out infinite}
+@keyframes sl{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
+.job .main{cursor:default}
+.job .cur{font:11.5px var(--mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 16px 12px}
+.job .err{color:var(--err);font-size:13px;padding:0 16px 12px}
+.empty{text-align:center;padding:52px 20px;color:var(--mute);border:1px dashed var(--line2);border-radius:20px}
+.empty svg{width:52px;height:52px;color:var(--faint)}
+.empty h2{font:600 22px var(--serif);color:var(--ink);margin:8px 0 6px}
+.empty p{margin:0 auto;max-width:360px}
+
+/* sommaire */
+.head{padding:4px 2px 14px}
+.head h2{font:600 28px/1.15 var(--serif);margin:0 0 6px;letter-spacing:-.01em}
+.head .meta{font:12.5px var(--mono);color:var(--mute);word-break:break-all}
+.row{display:flex;gap:10px;margin:14px 0}
+.row .btn{flex:1}
+.filter{width:100%;height:46px;border-radius:13px;border:1px solid var(--line2);background:var(--paper);padding:0 14px;outline:none;font-size:16px}
+.filter:focus{border-color:var(--ink)}
+.toc{margin-top:12px;border-top:1px solid var(--line)}
+.toc a{display:flex;gap:12px;align-items:baseline;padding:13px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.toc a:active{background:var(--paper)}
+.toc .n{font:12px var(--mono);color:var(--faint);min-width:34px;text-align:right}
+.toc .tt{flex:1;min-width:0}
+.toc .tt b{display:block;font-weight:550;line-height:1.3}
+.toc .tt span{display:block;font:11.5px var(--mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.toc a.cur b{color:var(--acc)}
+.toc .snip{display:block;color:var(--mute);font-size:13.5px;margin-top:4px}
+.toc mark{background:var(--acc-soft);color:inherit;border-radius:3px;padding:0 2px}
+.more{display:block;margin:16px auto 0}
+
+/* lecteur */
+.reader{--fs:19px;--lh:1.62}
+.reader article{font:var(--fs)/var(--lh) var(--rf,var(--serif));color:var(--ink);overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
+.reader article h1,.reader article h2,.reader article h3,.reader article h4{font-family:var(--serif);line-height:1.2;letter-spacing:-.01em;margin:1.4em 0 .5em}
+.reader article h1{font-size:1.7em;margin-top:.2em}
+.reader article h2{font-size:1.35em}
+.reader article h3{font-size:1.15em}
+.reader article p{margin:0 0 1em}
+.reader article a{color:var(--acc);text-decoration-thickness:1px;text-underline-offset:3px}
+.reader article a.x{color:var(--mute);text-decoration-style:dashed}
+.reader article img{display:block;max-width:100%;height:auto;margin:1.2em auto;border-radius:10px;background:var(--line)}
+.reader article figure{margin:1.2em 0}
+.reader article figcaption{font:13px/1.4 var(--sans);color:var(--mute);text-align:center}
+.reader article blockquote{margin:1.2em 0;padding:.2em 0 .2em 1em;border-left:3px solid var(--acc);color:var(--ink2)}
+.reader article pre{font:14px/1.5 var(--mono);background:var(--paper);border:1px solid var(--line);padding:12px;border-radius:10px;overflow:auto}
+.reader article code{font-family:var(--mono);font-size:.88em}
+.reader article table{border-collapse:collapse;display:block;overflow:auto;font:15px/1.4 var(--sans);margin:1em 0}
+.reader article td,.reader article th{border:1px solid var(--line2);padding:6px 9px}
+.reader article ul,.reader article ol{padding-left:1.3em}
+.reader article li{margin:.25em 0}
+.reader article hr{border:0;border-top:1px solid var(--line2);margin:2em 0}
+.reader .src{font:12px var(--mono);color:var(--mute);margin-bottom:18px;word-break:break-all}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:40px;padding-top:18px;border-top:1px solid var(--line)}
+.pager button{text-align:left;background:var(--paper);border:1px solid var(--line2);border-radius:14px;padding:12px 14px;min-height:70px}
+.pager button:last-child{text-align:right}
+.pager small{display:block;font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.pager b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:600;font-size:14.5px;line-height:1.3;margin-top:3px}
+.pager button[disabled]{visibility:hidden}
+
+/* feuilles */
+.sheet-bg{position:fixed;inset:0;z-index:40;background:rgba(18,17,16,.42);opacity:0;pointer-events:none;transition:opacity .2s}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:620px;margin:0 auto;background:var(--paper);border-radius:22px 22px 0 0;
+  padding:10px 18px calc(var(--sb) + 20px);transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);max-height:92dvh;overflow:auto;box-shadow:0 -10px 40px -10px rgba(0,0,0,.35)}
+.sheet.on{transform:none}
+.sheet .grip{width:40px;height:5px;border-radius:9px;background:var(--line2);margin:0 auto 14px}
+.sheet h2{font:600 24px var(--serif);margin:0 0 4px}
+.sheet .sub{color:var(--mute);margin:0 0 18px;font-size:14.5px}
+.lbl{display:block;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:16px 0 8px}
+.inp{width:100%;height:52px;border-radius:14px;border:1px solid var(--line2);background:var(--bg);padding:0 14px;font:16px var(--mono);outline:none}
+.inp:focus{border-color:var(--ink)}
+.seg{display:grid;gap:8px}
+.seg label{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border:1px solid var(--line2);border-radius:14px;cursor:pointer;background:var(--bg)}
+.seg input{accent-color:var(--acc);width:18px;height:18px;margin:2px 0 0;flex:none}
+.seg label:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.seg b{display:block;font-weight:600}
+.seg span{display:block;font-size:13px;color:var(--mute)}
+.seg em{font:normal 600 12px var(--mono);color:var(--acc)}
+.range{display:flex;gap:14px;align-items:center}
+.range input{flex:1;accent-color:var(--acc)}
+.range output{font:600 15px var(--mono);min-width:52px;text-align:right}
+.chk{display:flex;gap:10px;align-items:center;margin-top:14px;font-size:15px}
+.chk input{accent-color:var(--acc);width:18px;height:18px}
+.sheet .actions{display:flex;gap:10px;margin-top:22px}
+.sheet .actions .btn{flex:1}
+.opts-row{display:flex;gap:8px;flex-wrap:wrap}
+.chip{height:42px;padding:0 16px;border-radius:12px;border:1px solid var(--line2);background:var(--bg);font-weight:600}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.sw{width:42px;padding:0}
+.toast{position:fixed;left:50%;bottom:calc(var(--sb) + 90px);z-index:60;transform:translate(-50%,16px);opacity:0;transition:all .22s;pointer-events:none;
+  background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-size:14.5px;max-width:calc(100vw - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast.err{background:var(--err);color:#fff}
+</style>
+</head>
+<body>
+
+<!-- Bibliothèque -->
+<section id="vLib">
+  <header class="bar">
+    <h1><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><g fill="none" stroke="var(--bg)" stroke-width="2.4" stroke-linecap="round"><circle cx="16" cy="8.5" r="2.6"/><path d="M16 11v14M10 15h12M7.5 19.5c1.5 4 4.8 5.8 8.5 5.8s7-1.8 8.5-5.8"/></g></svg>Ancre</h1>
+    <span class="pill" id="net">En ligne</span>
+    <button class="ib" id="bSettings" aria-label="Réglages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.6 15H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 9.7 4.6V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1.3z"/></svg></button>
+  </header>
+  <div class="page">
+    <div class="intro"><p>Tes sites, en version lecture, gardés sur l’appareil. Lisibles sans réseau.</p></div>
+    <div class="storage" id="storage" hidden><span id="stTxt"></span><span class="m"><i id="stBar"></i></span></div>
+    <div class="list" id="jobs"></div>
+    <div class="list" id="sites" style="margin-top:12px"></div>
+  </div>
+  <button class="btn primary fab" id="bAdd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Ajouter un site</button>
+</section>
+
+<!-- Sommaire d'un site -->
+<section id="vSite" hidden>
+  <header class="bar">
+    <button class="ib" data-go="#/" aria-label="Bibliothèque"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <div class="t"><b id="sTop"></b></div>
+    <button class="ib" id="bSiteMenu" aria-label="Options du site"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button>
+  </header>
+  <div class="page">
+    <div class="head"><h2 id="sTitle"></h2><div class="meta" id="sMeta"></div></div>
+    <div class="row"><button class="btn primary" id="bResume">Commencer</button></div>
+    <input class="filter" id="sFilter" type="search" placeholder="Chercher un titre ou un mot du texte…" autocomplete="off">
+    <div class="toc" id="toc"></div>
+    <button class="btn more" id="bMore" hidden>Afficher plus</button>
+  </div>
+</section>
+
+<!-- Lecteur -->
+<section id="vRead" class="reader" hidden>
+  <header class="bar">
+    <button class="ib" id="bBackSite" aria-label="Sommaire"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg></button>
+    <div class="t"><b id="rSite"></b><span id="rPos"></span></div>
+    <button class="ib" id="bType" aria-label="Affichage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19 9 5l5 14M5.8 14h6.4M15 19l3-8 3 8M16 16.5h4"/></svg></button>
+  </header>
+  <div class="page">
+    <div class="src" id="rSrc"></div>
+    <article id="art"></article>
+    <div class="pager"><button id="bPrev"><small>← Précédente</small><b></b></button><button id="bNext"><small>Suivante →</small><b></b></button></div>
+  </div>
+</section>
+
+<div class="sheet-bg" id="sheetBg"></div>
+
+<!-- Ajouter -->
+<div class="sheet" id="shAdd" role="dialog" aria-label="Ajouter un site">
+  <div class="grip"></div>
+  <h2>Ajouter un site</h2>
+  <p class="sub">Le serveur récupère et compacte le site, puis l’envoie sur l’appareil. Tu peux fermer l’appli pendant ce temps.</p>
+  <input class="inp" id="aUrl" type="url" inputmode="url" placeholder="https://exemple.fr" autocapitalize="off" autocorrect="off" spellcheck="false">
+  <span class="lbl">Format</span>
+  <div class="seg">
+    <label><input type="radio" name="mode" value="text" checked><div><b>Texte seul</b><span>Le plus léger : idéal pour articles, docs, wikis, romans. <em>≈ 2–5 Mo / 1000 pages</em></span></div></label>
+    <label><input type="radio" name="mode" value="images"><div><b>Texte + images légères</b><span>Jusqu’à 4 images par page, réduites et compressées. <em>≈ 30–60 Mo / 1000 pages</em></span></div></label>
+  </div>
+  <span class="lbl">Nombre de pages max</span>
+  <div class="range"><input type="range" id="aMax" min="20" max="3000" step="10" value="500"><output id="aMaxO">500</output></div>
+  <label class="chk"><input type="checkbox" id="aSame"> Rester dans le dossier de l’adresse</label>
+  <div class="actions"><button class="btn" data-close>Annuler</button><button class="btn primary" id="aGo">Télécharger</button></div>
+</div>
+
+<!-- Affichage -->
+<div class="sheet" id="shType" role="dialog" aria-label="Affichage">
+  <div class="grip"></div>
+  <h2>Affichage</h2>
+  <span class="lbl">Taille du texte</span>
+  <div class="opts-row"><button class="chip" data-fs="-1">A−</button><button class="chip" data-fs="1">A+</button><span class="mono" id="fsO" style="align-self:center;color:var(--mute);margin-left:6px"></span></div>
+  <span class="lbl">Thème</span>
+  <div class="opts-row" id="themes"><button class="chip" data-th="">Auto</button><button class="chip" data-th="light">Clair</button><button class="chip" data-th="sepia">Sépia</button><button class="chip" data-th="dark">Sombre</button></div>
+  <span class="lbl">Police</span>
+  <div class="opts-row" id="fonts"><button class="chip" data-ff="serif">Sérif</button><button class="chip" data-ff="sans">Sans sérif</button></div>
+  <span class="lbl">Interligne</span>
+  <div class="opts-row" id="lhs"><button class="chip" data-lh="1.45">Serré</button><button class="chip" data-lh="1.62">Normal</button><button class="chip" data-lh="1.85">Aéré</button></div>
+  <div class="actions"><button class="btn" data-close>Fermer</button></div>
+</div>
+
+<!-- Options du site -->
+<div class="sheet" id="shSite" role="dialog" aria-label="Options du site">
+  <div class="grip"></div>
+  <h2 id="ssTitle"></h2>
+  <p class="sub" id="ssSub"></p>
+  <div class="seg" style="gap:10px">
+    <button class="btn" id="ssUpdate">Mettre à jour (retélécharger)</button>
+    <a class="btn" id="ssOpen" target="_blank" rel="noopener">Ouvrir le site en ligne</a>
+    <button class="btn danger" id="ssDelete">Supprimer de l’appareil</button>
+  </div>
+  <div class="actions"><button class="btn" data-close>Fermer</button></div>
+</div>
+
+<!-- Lien non téléchargé -->
+<div class="sheet" id="shMiss" role="dialog" aria-label="Page absente">
+  <div class="grip"></div>
+  <h2>Page non téléchargée</h2>
+  <p class="sub">Elle était au-delà de la limite de pages ou de profondeur lors du téléchargement.</p>
+  <div class="inp" id="mUrl" style="height:auto;padding:12px 14px;font-size:13px;word-break:break-all;line-height:1.45"></div>
+  <div class="actions"><button class="btn" data-close>Fermer</button><a class="btn primary" id="mOpen" target="_blank" rel="noopener">Ouvrir en ligne</a></div>
+</div>
+
+<!-- Réglages -->
+<div class="sheet" id="shSettings" role="dialog" aria-label="Réglages">
+  <div class="grip"></div>
+  <h2>Réglages</h2>
+  <p class="sub" id="setInfo"></p>
+  <span class="lbl">Code d’accès du serveur</span>
+  <input class="inp" id="setCode" type="password" placeholder="Seulement si ton serveur en demande un" autocomplete="off">
+  <p class="sub" style="margin-top:14px">Pour l’installer comme une appli : bouton Partager → « Sur l’écran d’accueil ». Les sites restent alors stockés de façon durable.</p>
+  <div class="actions"><button class="btn" data-close>Fermer</button><button class="btn primary" id="setSave">Enregistrer</button></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const nf = new Intl.NumberFormat('fr-FR');
+const fmtB = (b) => { if (!b) return '0 o'; const u = ['o', 'Ko', 'Mo', 'Go']; const i = Math.min(3, Math.floor(Math.log(b) / Math.log(1024))); return (b / 1024 ** i).toFixed(i > 1 ? 1 : 0).replace('.', ',') + ' ' + u[i]; };
+const hue = (s) => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % 360; };
+const ls = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
+
+let toastT;
+function toast(m, err) { const t = $('#toast'); t.textContent = m; t.className = 'toast on' + (err ? ' err' : ''); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 3200); }
+
+/* ───── Base locale (IndexedDB) ───── */
+const DB = (() => {
+  let p;
+  const open = () => p || (p = new Promise((res, rej) => {
+    const r = indexedDB.open('ancre', 1);
+    r.onupgradeneeded = () => { const d = r.result; d.createObjectStore('sites', { keyPath: 'id' }); d.createObjectStore('pages'); d.createObjectStore('imgs'); };
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  }));
+  const tx = async (store, mode, fn) => {
+    const d = await open();
+    return new Promise((res, rej) => {
+      const t = d.transaction(store, mode); const req = fn(t.objectStore(store));
+      t.oncomplete = () => res(req && 'result' in req ? req.result : undefined);
+      t.onerror = () => rej(t.error); t.onabort = () => rej(t.error || new Error('Stockage plein ?'));
+    });
+  };
+  const range = (id) => IDBKeyRange.bound([id, 0], [id, Infinity]);
+  return {
+    get: (s, k) => tx(s, 'readonly', (o) => o.get(k)),
+    all: (s) => tx(s, 'readonly', (o) => o.getAll()),
+    put: (s, v, k) => tx(s, 'readwrite', (o) => k === undefined ? o.put(v) : o.put(v, k)),
+    putMany: (s, entries) => tx(s, 'readwrite', (o) => { for (const [k, v] of entries) o.put(v, k); }),
+    pagesOf: (id) => tx('pages', 'readonly', (o) => o.getAll(range(id))),
+    async dropSite(id) {
+      await tx('pages', 'readwrite', (o) => o.delete(range(id)));
+      await tx('imgs', 'readwrite', (o) => o.delete(range(id)));
+      await tx('sites', 'readwrite', (o) => o.delete(id));
+    },
+  };
+})();
+
+/* compression gzip native (Safari 16.4+, Chrome, Firefox) */
+const CAN_GZ = 'CompressionStream' in window;
+async function gz(str) { return new Response(new Blob([str]).stream().pipeThrough(new CompressionStream('gzip'))).blob(); }
+async function ungz(blob) { return new Response(blob.stream().pipeThrough(new DecompressionStream('gzip'))).text(); }
+const pageHtml = async (rec) => rec.z ? ungz(rec.z) : rec.h;
+
+/* ───── Serveur ───── */
+const api = async (p, o = {}) => {
+  let r;
+  try {
+    r = await fetch(p, { ...o, headers: { 'content-type': 'application/json', 'x-ancre-code': ls.get('code', ''), ...(o.headers || {}) }, body: o.body && typeof o.body !== 'string' ? JSON.stringify(o.body) : o.body });
+  } catch { throw new Error('Serveur injoignable. Vérifie ta connexion.'); }
+  if (o.raw) { if (!r.ok) throw new Error('Erreur ' + r.status); return r; }
+  if (!(r.headers.get('content-type') || '').includes('json')) throw new Error(`Le serveur Ancre ne répond pas (erreur ${r.status}). Il ne fonctionne pas sur GitHub Pages : voir le README.`);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(j.error || 'Erreur ' + r.status); e.status = r.status; throw e; }
+  return j;
+};
+
+/* ───── Réseau ───── */
+function net() { const on = navigator.onLine; const n = $('#net'); n.textContent = on ? 'En ligne' : 'Hors ligne'; n.classList.toggle('off', !on); }
+addEventListener('online', () => { net(); pollJobs(); }); addEventListener('offline', net); net();
+
+/* ───── Feuilles ───── */
+let openSheet = null;
+function sheet(id) { closeSheet(); openSheet = $(id); openSheet.classList.add('on'); $('#sheetBg').classList.add('on'); }
+function closeSheet() { if (openSheet) openSheet.classList.remove('on'); openSheet = null; $('#sheetBg').classList.remove('on'); }
+$('#sheetBg').onclick = closeSheet;
+document.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) closeSheet(); const g = e.target.closest('[data-go]'); if (g) location.hash = g.dataset.go; });
+
+/* ───── Bibliothèque ───── */
+let sites = [];
+async function loadSites() { sites = (await DB.all('sites')).sort((a, b) => (b.readAt || b.at) - (a.readAt || a.at)); }
+
+async function renderLib() {
+  await loadSites();
+  const box = $('#sites');
+  if (!sites.length && !jobsList().length) {
+    box.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v13M7.5 10.5h9M4 14c1 4 4.2 6 8 6s7-2 8-6"/></svg><h2>Rien à lire pour l’instant</h2><p>Ajoute un site en Wi-Fi : il sera ensuite lisible partout, même sans réseau.</p></div>`;
+  } else {
+    box.innerHTML = sites.map((s) => {
+      const pct = s.last != null ? Math.round(((s.last + 1) / s.count) * 100) : 0;
+      return `<div class="card" data-id="${esc(s.id)}" style="--h:hsl(${hue(s.root)} 36% 40%)">
+        <div class="main" data-open><div class="mark">${esc((s.title || s.root).trim().charAt(0).toUpperCase())}</div>
+        <div class="txt"><h3>${esc(s.title)}</h3><div class="meta">${esc(s.root)}</div></div>
+        <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div>
+        <div class="foot"><span>${nf.format(s.count)} pages</span><span>· ${fmtB(s.bytes)}</span><span class="sp"></span>${s.mode === 'images' ? '<span class="tag">images</span>' : '<span class="tag">texte</span>'}${pct ? `<span>${pct} %</span>` : ''}</div>
+        ${pct ? `<div class="prog"><i style="width:${pct}%"></i></div>` : ''}
+      </div>`;
+    }).join('');
+  }
+  storageInfo();
+}
+$('#sites').onclick = (e) => { const c = e.target.closest('.card'); if (c && e.target.closest('[data-open]')) location.hash = '#/s/' + c.dataset.id; };
+
+async function storageInfo() {
+  const total = sites.reduce((a, s) => a + (s.bytes || 0), 0);
+  if (!sites.length) { $('#storage').hidden = true; return; }
+  $('#storage').hidden = false;
+  let quota = 0; try { quota = (await navigator.storage.estimate()).quota || 0; } catch {}
+  $('#stTxt').textContent = `${sites.length} site${sites.length > 1 ? 's' : ''} · ${fmtB(total)}`;
+  $('#stBar').style.width = quota ? Math.max(1, Math.min(100, total / quota * 100)) + '%' : '2%';
+}
+
+/* ───── Ajouter / téléchargements ───── */
+const jobsList = () => ls.get('jobs', []);
+const setJobs = (l) => ls.set('jobs', l);
+let jobState = {}; // id → dernier état connu
+const savedOpts = ls.get('addOpts', { mode: 'text', maxPages: 500, samePath: false });
+
+$('#bAdd').onclick = () => {
+  $(`input[name=mode][value=${savedOpts.mode}]`).checked = true;
+  $('#aMax').value = savedOpts.maxPages; $('#aMaxO').textContent = nf.format(savedOpts.maxPages);
+  $('#aSame').checked = savedOpts.samePath;
+  sheet('#shAdd'); setTimeout(() => $('#aUrl').focus(), 250);
+};
+$('#aMax').oninput = () => $('#aMaxO').textContent = nf.format($('#aMax').value);
+$('#aGo').onclick = () => startJob($('#aUrl').value.trim(), {
+  mode: $('input[name=mode]:checked').value, maxPages: +$('#aMax').value, samePath: $('#aSame').checked,
+});
+$('#aUrl').onkeydown = (e) => { if (e.key === 'Enter') $('#aGo').click(); };
+
+async function startJob(url, opts) {
+  if (!url) return toast('Colle une adresse.', true);
+  if (!navigator.onLine) return toast('Il faut du réseau pour télécharger.', true);
+  Object.assign(savedOpts, opts); ls.set('addOpts', savedOpts);
+  $('#aGo').disabled = true;
+  try {
+    const j = await api('/api/jobs', { method: 'POST', body: { url, ...opts } });
+    setJobs([...jobsList(), { id: j.id, url: j.url, mode: j.mode, replace: opts.replace || null }]);
+    jobState[j.id] = j;
+    closeSheet(); $('#aUrl').value = '';
+    try { await navigator.storage?.persist?.(); } catch {}
+    if (location.hash && location.hash !== '#/') location.hash = '#/';
+    renderJobs(); pollJobs();
+  } catch (e) {
+    if (e.status === 401) { toast('Code d’accès requis : renseigne-le dans les réglages.', true); }
+    else toast(e.message, true);
+  } finally { $('#aGo').disabled = false; }
+}
+
+function renderJobs() {
+  const box = $('#jobs');
+  const list = jobsList();
+  box.innerHTML = list.map((jj) => {
+    const j = jobState[jj.id] || { status: 'running', pages: 0, maxPages: 0, url: jj.url };
+    const host = (() => { try { return new URL(j.url).hostname.replace(/^www\./, ''); } catch { return j.url; } })();
+    const importing = j.status === 'importing';
+    const failed = j.status === 'failed' || j.status === 'lost';
+    const pct = j.maxPages ? Math.min(100, j.pages / j.maxPages * 100) : 0;
+    const label = importing ? `Enregistrement sur l’appareil… ${j.importPct || 0} %` : failed ? 'Échec' : j.status === 'running' ? `${nf.format(j.pages)} pages récupérées` : 'Prêt';
+    return `<div class="card job" data-j="${esc(jj.id)}" style="--h:hsl(${hue(host)} 36% 40%)">
+      <div class="main"><div class="mark">${esc(host.charAt(0).toUpperCase())}</div>
+      <div class="txt"><h3>${esc(j.title && j.title !== host ? j.title : host)}</h3><div class="meta">${esc(label)}${j.status === 'running' && j.estimate ? ' · ≈ ' + fmtB(j.estimate) : ''}</div></div>
+      <button class="ib" data-cancel aria-label="${failed ? 'Retirer' : 'Arrêter'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+      ${failed ? `<div class="err">${esc(j.error || (j.log || []).filter((l) => l.level === 'error').slice(-1)[0]?.msg || 'Le téléchargement a échoué.')}</div>`
+        : `<div class="prog${j.status === 'running' && !j.queued && j.pages ? ' ind' : ''}"><i style="width:${importing ? (j.importPct || 0) : pct}%"></i></div>
+           <div class="cur">${esc(importing ? 'Ne ferme pas l’appli quelques secondes…' : (j.current || 'Démarrage…'))}</div>`}
+    </div>`;
+  }).join('');
+}
+$('#jobs').onclick = async (e) => {
+  if (!e.target.closest('[data-cancel]')) return;
+  const id = e.target.closest('[data-j]').dataset.j;
+  const st = jobState[id];
+  if (st && st.status === 'running') { try { await api(`/api/jobs/${id}/cancel`, { method: 'POST' }); toast('Arrêt demandé : les pages récupérées seront gardées.'); } catch (err) { toast(err.message, true); } return; }
+  setJobs(jobsList().filter((j) => j.id !== id)); delete jobState[id]; renderJobs(); renderLib();
+  api(`/api/jobs/${id}`, { method: 'DELETE' }).catch(() => {});
+};
+
+let polling = false;
+async function pollJobs() {
+  if (polling || !navigator.onLine) return;
+  polling = true;
+  try {
+    for (const jj of jobsList()) {
+      const cur = jobState[jj.id];
+      if (cur && ['importing', 'failed', 'lost'].includes(cur.status)) continue;
+      try {
+        const j = await api('/api/jobs/' + jj.id);
+        jobState[jj.id] = j;
+        if (j.status === 'done' || (j.status === 'cancelled' && j.pages)) importJob(jj, j);
+      } catch (e) {
+        if (e.status === 404) jobState[jj.id] = { ...(cur || {}), url: jj.url, status: 'lost', error: 'Téléchargement expiré sur le serveur (redémarré ou trop ancien). Relance-le.' };
+      }
+    }
+  } finally { polling = false; renderJobs(); }
+}
+setInterval(() => { if (jobsList().length && document.visibilityState === 'visible') pollJobs(); }, 1500);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') pollJobs(); });
+
+async function importJob(jj, j) {
+  jobState[jj.id] = { ...j, status: 'importing', importPct: 0 };
+  renderJobs();
+  try {
+    const pack = await api(`/api/jobs/${jj.id}/pack`);
+    let imgBuf = null;
+    if (pack.imgs?.some(Boolean)) imgBuf = await (await api(`/api/jobs/${jj.id}/images`, { raw: true })).arrayBuffer();
+    const s = pack.site;
+    const id = jj.replace || ('s' + hue(s.url).toString(36) + Date.now().toString(36));
+    if (jj.replace) await DB.dropSite(jj.replace);
+    let bytes = 0;
+    const toc = [];
+    const batch = [];
+    for (let i = 0; i < pack.pages.length; i++) {
+      const p = pack.pages[i];
+      const rec = CAN_GZ ? { z: await gz(p.h) } : { h: p.h };
+      bytes += rec.z ? rec.z.size : p.h.length * 2;
+      toc.push([p.t, p.u]);
+      batch.push([[id, i], rec]);
+      if (batch.length >= 100) { await DB.putMany('pages', batch.splice(0)); jobState[jj.id].importPct = Math.round(i / pack.pages.length * 90); renderJobs(); }
+    }
+    if (batch.length) await DB.putMany('pages', batch);
+    if (imgBuf) {
+      const imgs = [];
+      pack.imgs.forEach((r, n) => { if (r) { const b = new Blob([imgBuf.slice(r[0], r[0] + r[1])], { type: 'image/webp' }); bytes += b.size; imgs.push([[id, n], b]); } });
+      for (let k = 0; k < imgs.length; k += 200) await DB.putMany('imgs', imgs.slice(k, k + 200));
+    }
+    const old = jj.replace ? sites.find((x) => x.id === jj.replace) : null;
+    bytes += JSON.stringify(toc).length;
+    await DB.put('sites', { id, url: s.url, root: s.root, title: s.title, mode: s.mode, count: pack.pages.length, toc, bytes, at: Date.now(), last: old?.last ?? null, readAt: old?.readAt });
+    setJobs(jobsList().filter((x) => x.id !== jj.id)); delete jobState[jj.id];
+    api(`/api/jobs/${jj.id}`, { method: 'DELETE' }).catch(() => {});
+    toast(`« ${s.title} » est disponible hors ligne (${fmtB(bytes)})`);
+  } catch (e) {
+    jobState[jj.id] = { ...j, status: 'failed', error: /quota|plein|QuotaExceeded/i.test(e.message + e.name) ? 'Plus assez d’espace sur l’appareil.' : e.message };
+  }
+  renderJobs(); renderLib();
+}
+
+/* ───── Sommaire ───── */
+let cur = { site: null, filterHits: null, shown: 200 };
+async function showSite(id) {
+  const s = await DB.get('sites', id);
+  if (!s) { location.hash = '#/'; return; }
+  cur.site = s; cur.shown = 200; cur.filterHits = null;
+  $('#sTop').textContent = s.root; $('#sTitle').textContent = s.title;
+  $('#sMeta').textContent = `${nf.format(s.count)} pages · ${fmtB(s.bytes)} · ${s.url.replace(/^https?:\/\//, '')}`;
+  $('#bResume').textContent = s.last != null ? `Reprendre · page ${s.last + 1}` : 'Commencer la lecture';
+  $('#sFilter').value = '';
+  renderToc();
+}
+function renderToc() {
+  const s = cur.site, q = $('#sFilter').value.trim().toLowerCase();
+  let items = s.toc.map((t, i) => ({ i, t: t[0], u: t[1] }));
+  if (q) items = cur.filterHits ?? items.filter((x) => (x.t + ' ' + x.u).toLowerCase().includes(q));
+  const hl = (str) => q ? esc(str).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>') : esc(str);
+  $('#toc').innerHTML = items.slice(0, cur.shown).map((x) => `<a href="#/s/${s.id}/p/${x.i}" class="${x.i === s.last ? 'cur' : ''}"><span class="n">${x.i + 1}</span><span class="tt"><b>${hl(x.t)}</b><span>${esc(x.u.replace(/^https?:\/\/(www\.)?[^/]+/, '') || '/')}</span>${x.snip ? `<span class="snip">${hl(x.snip)}</span>` : ''}</span></a>`).join('')
+    || `<p style="color:var(--mute);padding:18px 4px">Aucun résultat.</p>`;
+  $('#bMore').hidden = items.length <= cur.shown;
+}
+$('#bMore').onclick = () => { cur.shown += 300; renderToc(); };
+$('#bResume').onclick = () => { location.hash = `#/s/${cur.site.id}/p/${cur.site.last ?? 0}`; };
+
+let searchT, searchSeq = 0;
+$('#sFilter').oninput = () => {
+  cur.filterHits = null; renderToc();
+  clearTimeout(searchT);
+  const q = $('#sFilter').value.trim().toLowerCase();
+  if (q.length < 3) return;
+  searchT = setTimeout(async () => {
+    const seq = ++searchSeq, s = cur.site;
+    const recs = await DB.pagesOf(s.id);
+    const hits = [];
+    const norm = (t) => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const nq = norm(q);
+    for (let i = 0; i < recs.length; i++) {
+      const text = (await pageHtml(recs[i])).replace(/<[^>]+>/g, ' ').replace(/&\w+;/g, ' ').replace(/\s+/g, ' ');
+      const t = s.toc[i]?.[0] || '';
+      const pos = norm(text).indexOf(nq);
+      if (pos >= 0 || norm(t).includes(nq)) hits.push({ i, t, u: s.toc[i]?.[1] || '', snip: pos >= 0 ? '…' + text.slice(Math.max(0, pos - 60), pos + q.length + 90) + '…' : '' });
+      if (seq !== searchSeq) return;
+    }
+    cur.filterHits = hits; renderToc();
+  }, 350);
+};
+
+$('#bSiteMenu').onclick = () => {
+  const s = cur.site;
+  $('#ssTitle').textContent = s.title; $('#ssSub').textContent = `${nf.format(s.count)} pages · ${fmtB(s.bytes)} · enregistré le ${new Date(s.at).toLocaleDateString('fr-FR')}`;
+  $('#ssOpen').href = s.url; sheet('#shSite');
+};
+$('#ssUpdate').onclick = () => { const s = cur.site; closeSheet(); startJob(s.url, { mode: s.mode, maxPages: Math.max(s.count, savedOpts.maxPages), replace: s.id }); };
+$('#ssDelete').onclick = async () => {
+  const s = cur.site;
+  if (!confirm(`Supprimer « ${s.title} » de l’appareil ?`)) return;
+  await DB.dropSite(s.id); closeSheet(); toast('Site supprimé'); location.hash = '#/';
+};
+
+/* ───── Lecteur ───── */
+const prefs = Object.assign({ fs: 19, th: '', ff: 'serif', lh: 1.62 }, ls.get('prefs', {}));
+function applyPrefs() {
+  const r = $('#vRead');
+  r.style.setProperty('--fs', prefs.fs + 'px'); r.style.setProperty('--lh', prefs.lh);
+  r.style.setProperty('--rf', prefs.ff === 'sans' ? 'var(--sans)' : 'var(--serif)');
+  if (prefs.th) document.documentElement.dataset.theme = prefs.th; else delete document.documentElement.dataset.theme;
+  $('#fsO').textContent = prefs.fs + ' px';
+  $$('#themes .chip').forEach((b) => b.classList.toggle('on', b.dataset.th === prefs.th));
+  $$('#fonts .chip').forEach((b) => b.classList.toggle('on', b.dataset.ff === prefs.ff));
+  $$('#lhs .chip').forEach((b) => b.classList.toggle('on', +b.dataset.lh === prefs.lh));
+  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  $$('meta[name=theme-color]').forEach((m) => m.content = bg);
+  ls.set('prefs', prefs);
+}
+$('#shType').onclick = (e) => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  if (b.dataset.fs) prefs.fs = Math.max(14, Math.min(30, prefs.fs + +b.dataset.fs));
+  if ('th' in b.dataset) prefs.th = b.dataset.th;
+  if (b.dataset.ff) prefs.ff = b.dataset.ff;
+  if (b.dataset.lh) prefs.lh = +b.dataset.lh;
+  applyPrefs();
+};
+$('#bType').onclick = () => sheet('#shType');
+applyPrefs();
+
+let urls = [];
+async function showPage(id, i, anchor) {
+  if (!cur.site || cur.site.id !== id) cur.site = await DB.get('sites', id);
+  const s = cur.site;
+  if (!s) { location.hash = '#/'; return; }
+  i = Math.max(0, Math.min(s.count - 1, i));
+  const rec = await DB.get('pages', [id, i]);
+  urls.forEach(URL.revokeObjectURL); urls = [];
+  const art = $('#art');
+  art.innerHTML = rec ? await pageHtml(rec) : '<p>Page illisible.</p>';
+  const [title, url] = s.toc[i] || ['', ''];
+  if (!art.querySelector('h1') && title) art.insertAdjacentHTML('afterbegin', `<h1>${esc(title)}</h1>`);
+  $('#rSite').textContent = s.title; $('#rPos').textContent = `${i + 1} / ${s.count}`;
+  $('#rSrc').textContent = url.replace(/^https?:\/\//, '');
+  art.querySelectorAll('a').forEach((a) => {
+    if (a.dataset.p != null) { const [n, f] = a.dataset.p.split('#'); a.href = `#/s/${id}/p/${n}${f ? '/' + encodeURIComponent(f) : ''}`; }
+    else if (a.dataset.x) { a.href = '#'; a.classList.add('x'); }
+    else if (a.getAttribute('href')) { a.target = '_blank'; a.rel = 'noopener'; }
+  });
+  for (const img of art.querySelectorAll('img[data-i]')) {
+    DB.get('imgs', [id, +img.dataset.i]).then((b) => { if (b) { const u = URL.createObjectURL(b); urls.push(u); img.src = u; } else img.remove(); });
+  }
+  const prev = $('#bPrev'), next = $('#bNext');
+  prev.disabled = i === 0; next.disabled = i >= s.count - 1;
+  $('b', prev).textContent = s.toc[i - 1]?.[0] || ''; $('b', next).textContent = s.toc[i + 1]?.[0] || '';
+  prev.onclick = () => location.hash = `#/s/${id}/p/${i - 1}`;
+  next.onclick = () => location.hash = `#/s/${id}/p/${i + 1}`;
+  const target = anchor && document.getElementById(anchor);
+  if (target) target.scrollIntoView(); else scrollTo(0, 0);
+  s.last = i; s.readAt = Date.now();
+  DB.put('sites', s).catch(() => {});
+}
+$('#art').addEventListener('click', (e) => {
+  const a = e.target.closest('a.x'); if (!a) return;
+  e.preventDefault();
+  $('#mUrl').textContent = a.dataset.x; $('#mOpen').href = a.dataset.x;
+  $('#mOpen').hidden = !navigator.onLine;
+  sheet('#shMiss');
+});
+$('#bBackSite').onclick = () => location.hash = '#/s/' + cur.site.id;
+
+/* ───── Réglages ───── */
+$('#bSettings').onclick = async () => {
+  $('#setCode').value = ls.get('code', '');
+  $('#setInfo').textContent = 'Vérification du serveur…';
+  sheet('#shSettings');
+  try { const h = await api('/api/health'); $('#setInfo').textContent = `Serveur Ancre ${h.version} connecté${h.images ? '' : ' (images indisponibles)'}${h.code ? ' · code d’accès requis' : ''}.`; }
+  catch (e) { $('#setInfo').textContent = navigator.onLine ? e.message : 'Hors ligne : la lecture fonctionne, le téléchargement attendra le réseau.'; }
+};
+$('#setSave').onclick = () => { ls.set('code', $('#setCode').value.trim()); closeSheet(); toast('Enregistré'); };
+
+/* ───── Navigation ───── */
+async function route() {
+  closeSheet();
+  const h = location.hash.replace(/^#/, '') || '/';
+  let m;
+  for (const v of ['#vLib', '#vSite', '#vRead']) $(v).hidden = true;
+  if ((m = /^\/s\/([^/]+)\/p\/(\d+)(?:\/(.+))?$/.exec(h))) { $('#vRead').hidden = false; await showPage(m[1], +m[2], m[3] && decodeURIComponent(m[3])); }
+  else if ((m = /^\/s\/([^/]+)$/.exec(h))) { $('#vSite').hidden = false; await showSite(m[1]); scrollTo(0, 0); }
+  else { $('#vLib').hidden = false; await renderLib(); renderJobs(); }
+}
+addEventListener('hashchange', route);
+route(); pollJobs();
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+</script>
+</body>
+</html>
