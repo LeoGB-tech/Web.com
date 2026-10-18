@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ancre
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: ACCESS_CODE
+        sync: false
