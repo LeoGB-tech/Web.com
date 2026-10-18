@@ -3,15 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f3efe6" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3efe6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Ancre">
-<link rel="manifest" href="/manifest.webmanifest">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="icon" href="/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
 <title>Ancre</title>
 <style>
 :root{
@@ -39,12 +38,11 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink)}
 body{font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased;min-height:100dvh;padding-left:var(--sl);padding-right:var(--sr)}
-button,input{font:inherit;color:inherit}
+button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;touch-action:manipulation}
 [hidden]{display:none!important}
 .mono{font-family:var(--mono)}
 
-/* barre */
 .bar{position:sticky;top:0;z-index:20;padding:calc(var(--st) + 8px) 14px 8px;display:flex;align-items:center;gap:8px;
   background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .bar h1{margin:0;font:600 24px/1 var(--serif);letter-spacing:-.01em;display:flex;align-items:center;gap:9px;flex:1;min-width:0}
@@ -55,50 +53,51 @@ button{cursor:pointer;touch-action:manipulation}
 .ib{width:42px;height:42px;border-radius:12px;border:0;background:none;display:grid;place-items:center;flex:none;color:var(--ink)}
 .ib:active{background:color-mix(in srgb,var(--ink) 8%,transparent)}
 .ib svg{width:22px;height:22px}
-.pill{font:600 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:6px;color:var(--ok);padding:0 4px}
+.pill{font:600 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:6px;color:var(--ok);padding:0 4px;white-space:nowrap}
 .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .pill.off{color:var(--warn)}
 
 .page{max-width:760px;margin:0 auto;padding:18px 16px calc(var(--sb) + 110px)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 18px;border-radius:13px;border:1px solid var(--line2);background:var(--paper);font-weight:600;font-size:15px;text-decoration:none;color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;border-radius:13px;border:1px solid var(--line2);background:var(--paper);font-weight:600;font-size:15px;text-decoration:none;color:var(--ink);text-align:center}
 .btn:active{transform:translateY(1px)}
-.btn svg{width:18px;height:18px}
+.btn svg{width:18px;height:18px;flex:none}
 .btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .btn.danger{color:var(--err)}
+.btn.mini{min-height:36px;padding:0 13px;font-size:13.5px;border-radius:10px}
 .btn[disabled]{opacity:.45;pointer-events:none}
-.fab{position:fixed;right:calc(18px + var(--sr));bottom:calc(18px + var(--sb));z-index:15;height:56px;padding:0 22px;border-radius:18px;box-shadow:0 14px 30px -12px rgba(0,0,0,.45)}
+.fab{position:fixed;right:calc(18px + var(--sr));bottom:calc(18px + var(--sb));z-index:15;min-height:56px;padding:0 22px;border-radius:18px;box-shadow:0 14px 30px -12px rgba(0,0,0,.45)}
 
-/* bibliothèque */
-.intro{padding:6px 2px 16px}
+.intro{padding:6px 2px 14px}
 .intro p{margin:0;color:var(--mute);font-size:15px}
-.storage{display:flex;align-items:center;gap:10px;font:12px var(--mono);color:var(--mute);margin:4px 2px 18px}
+.note{display:flex;gap:12px;align-items:flex-start;background:var(--paper);border:1px solid var(--line2);border-left:3px solid var(--acc);border-radius:14px;padding:12px 14px;margin:0 0 12px;font-size:14.5px;color:var(--ink2)}
+.note b{color:var(--ink)}
+.note .x{margin-left:auto;flex:none;border:0;background:none;color:var(--mute);font-size:20px;line-height:1;padding:0 2px}
+.note .btn{margin-top:8px}
+.storage{display:flex;align-items:center;gap:10px;font:12px var(--mono);color:var(--mute);margin:4px 2px 16px}
 .storage .m{flex:1;height:5px;border-radius:9px;background:var(--line);overflow:hidden}
 .storage .m i{display:block;height:100%;background:var(--acc);border-radius:9px}
+
 .list{display:grid;gap:12px}
 .card{background:var(--paper);border:1px solid var(--line2);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-.card .main{display:flex;gap:14px;padding:16px;align-items:center;cursor:pointer}
+.card .main{display:flex;gap:14px;padding:16px 16px 10px;align-items:center;cursor:pointer}
 .mark{width:48px;height:48px;border-radius:13px;flex:none;display:grid;place-items:center;color:#fff;font:600 22px var(--serif);background:var(--h)}
 .card .txt{flex:1;min-width:0}
 .card h3{margin:0 0 2px;font:600 18px/1.25 var(--serif);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card .meta{font:12px var(--mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .go{color:var(--faint)}
 .card .go svg{width:20px;height:20px}
-.card .foot{display:flex;align-items:center;gap:8px;padding:0 16px 14px;font:12px var(--mono);color:var(--mute)}
-.card .foot .tag{border:1px solid var(--line2);border-radius:99px;padding:2px 8px}
-.card .foot .sp{flex:1}
+.card .status{font:12.5px/1.45 var(--mono);color:var(--mute);padding:0 16px 10px}
+.card .status.err{color:var(--err);font-family:var(--sans);font-size:14px}
+.card .status.live{color:var(--acc)}
 .prog{height:4px;background:var(--line);border-radius:9px;overflow:hidden;margin:0 16px 14px}
-.prog i{display:block;height:100%;background:var(--acc);transition:width .5s}
-.prog.ind i{width:35%!important;animation:sl 1.2s ease-in-out infinite}
-@keyframes sl{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
-.job .main{cursor:default}
-.job .cur{font:11.5px var(--mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 16px 12px}
-.job .err{color:var(--err);font-size:13px;padding:0 16px 12px}
+.prog i{display:block;height:100%;background:var(--acc);transition:width .5s;width:0}
+.card .acts{display:flex;gap:8px;padding:0 16px 14px;flex-wrap:wrap}
+.card .acts:empty{display:none}
 .empty{text-align:center;padding:52px 20px;color:var(--mute);border:1px dashed var(--line2);border-radius:20px}
 .empty svg{width:52px;height:52px;color:var(--faint)}
 .empty h2{font:600 22px var(--serif);color:var(--ink);margin:8px 0 6px}
-.empty p{margin:0 auto;max-width:360px}
+.empty p{margin:0 auto;max-width:380px}
 
-/* sommaire */
 .head{padding:4px 2px 14px}
 .head h2{font:600 28px/1.15 var(--serif);margin:0 0 6px;letter-spacing:-.01em}
 .head .meta{font:12.5px var(--mono);color:var(--mute);word-break:break-all}
@@ -114,11 +113,10 @@ button{cursor:pointer;touch-action:manipulation}
 .toc .tt b{display:block;font-weight:550;line-height:1.3}
 .toc .tt span{display:block;font:11.5px var(--mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .toc a.cur b{color:var(--acc)}
-.toc .snip{display:block;color:var(--mute);font-size:13.5px;margin-top:4px}
+.toc .snip{display:block;color:var(--mute);font-size:13.5px;margin-top:4px;white-space:normal!important;font-family:var(--sans)!important}
 .toc mark{background:var(--acc-soft);color:inherit;border-radius:3px;padding:0 2px}
-.more{display:block;margin:16px auto 0}
+.more{display:flex;margin:16px auto 0}
 
-/* lecteur */
 .reader{--fs:19px;--lh:1.62}
 .reader article{font:var(--fs)/var(--lh) var(--rf,var(--serif));color:var(--ink);overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
 .reader article h1,.reader article h2,.reader article h3,.reader article h4{font-family:var(--serif);line-height:1.2;letter-spacing:-.01em;margin:1.4em 0 .5em}
@@ -128,11 +126,13 @@ button{cursor:pointer;touch-action:manipulation}
 .reader article p{margin:0 0 1em}
 .reader article a{color:var(--acc);text-decoration-thickness:1px;text-underline-offset:3px}
 .reader article a.x{color:var(--mute);text-decoration-style:dashed}
-.reader article img{display:block;max-width:100%;height:auto;margin:1.2em auto;border-radius:10px;background:var(--line)}
+.reader article img{display:block;max-width:100%;height:auto;margin:1em auto;border-radius:8px}
+.reader article img:not([src]){min-height:160px;width:100%;background:var(--line)}
+.reader article .noimg{display:block;margin:1em 0;padding:14px;border:1px dashed var(--line2);border-radius:10px;font:13px var(--sans);color:var(--mute);text-align:center}
 .reader article figure{margin:1.2em 0}
 .reader article figcaption{font:13px/1.4 var(--sans);color:var(--mute);text-align:center}
 .reader article blockquote{margin:1.2em 0;padding:.2em 0 .2em 1em;border-left:3px solid var(--acc);color:var(--ink2)}
-.reader article pre{font:14px/1.5 var(--mono);background:var(--paper);border:1px solid var(--line);padding:12px;border-radius:10px;overflow:auto}
+.reader article pre{font:14px/1.5 var(--mono);background:var(--paper);border:1px solid var(--line);padding:12px;border-radius:10px;overflow:auto;white-space:pre}
 .reader article code{font-family:var(--mono);font-size:.88em}
 .reader article table{border-collapse:collapse;display:block;overflow:auto;font:15px/1.4 var(--sans);margin:1em 0}
 .reader article td,.reader article th{border:1px solid var(--line2);padding:6px 9px}
@@ -147,15 +147,14 @@ button{cursor:pointer;touch-action:manipulation}
 .pager b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:600;font-size:14.5px;line-height:1.3;margin-top:3px}
 .pager button[disabled]{visibility:hidden}
 
-/* feuilles */
 .sheet-bg{position:fixed;inset:0;z-index:40;background:rgba(18,17,16,.42);opacity:0;pointer-events:none;transition:opacity .2s}
 .sheet-bg.on{opacity:1;pointer-events:auto}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:620px;margin:0 auto;background:var(--paper);border-radius:22px 22px 0 0;
-  padding:10px 18px calc(var(--sb) + 20px);transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);max-height:92dvh;overflow:auto;box-shadow:0 -10px 40px -10px rgba(0,0,0,.35)}
-.sheet.on{transform:none}
+  padding:10px 18px calc(var(--sb) + 20px);transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);max-height:92dvh;overflow:auto;box-shadow:0 -10px 40px -10px rgba(0,0,0,.35);visibility:hidden}
+.sheet.on{transform:none;visibility:visible}
 .sheet .grip{width:40px;height:5px;border-radius:9px;background:var(--line2);margin:0 auto 14px}
 .sheet h2{font:600 24px var(--serif);margin:0 0 4px}
-.sheet .sub{color:var(--mute);margin:0 0 18px;font-size:14.5px}
+.sheet .sub{color:var(--mute);margin:0 0 16px;font-size:14.5px}
 .lbl{display:block;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:16px 0 8px}
 .inp{width:100%;height:52px;border-radius:14px;border:1px solid var(--line2);background:var(--bg);padding:0 14px;font:16px var(--mono);outline:none}
 .inp:focus{border-color:var(--ink)}
@@ -174,9 +173,18 @@ button{cursor:pointer;touch-action:manipulation}
 .sheet .actions{display:flex;gap:10px;margin-top:22px}
 .sheet .actions .btn{flex:1}
 .opts-row{display:flex;gap:8px;flex-wrap:wrap}
-.chip{height:42px;padding:0 16px;border-radius:12px;border:1px solid var(--line2);background:var(--bg);font-weight:600}
+.chip{min-height:42px;padding:0 16px;border-radius:12px;border:1px solid var(--line2);background:var(--bg);font-weight:600}
 .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.chip.sw{width:42px;padding:0}
+.hint{font-size:13.5px;color:var(--mute);margin:14px 0 0}
+.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:12px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:15px;color:var(--ink2)}
+.steps li::before{content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:600 13px var(--mono)}
+.steps .btn{margin-top:8px}
+.steps code{font:13px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+.codebox{width:100%;height:150px;border-radius:12px;border:1px solid var(--line2);background:var(--bg);font:11px/1.4 var(--mono);padding:10px;margin-top:8px}
+details.more-info summary{cursor:pointer;color:var(--mute);font-size:14px;margin-top:14px}
+.st{font-size:14.5px;margin-top:12px;min-height:1.4em}
+.st.ok{color:var(--ok)}.st.err{color:var(--err)}
 .toast{position:fixed;left:50%;bottom:calc(var(--sb) + 90px);z-index:60;transform:translate(-50%,16px);opacity:0;transition:all .22s;pointer-events:none;
   background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-size:14.5px;max-width:calc(100vw - 32px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -185,7 +193,7 @@ button{cursor:pointer;touch-action:manipulation}
 </head>
 <body>
 
-<!-- Bibliothèque -->
+<!-- ═════ Bibliothèque ═════ -->
 <section id="vLib">
   <header class="bar">
     <h1><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><g fill="none" stroke="var(--bg)" stroke-width="2.4" stroke-linecap="round"><circle cx="16" cy="8.5" r="2.6"/><path d="M16 11v14M10 15h12M7.5 19.5c1.5 4 4.8 5.8 8.5 5.8s7-1.8 8.5-5.8"/></g></svg>Ancre</h1>
@@ -194,14 +202,15 @@ button{cursor:pointer;touch-action:manipulation}
   </header>
   <div class="page">
     <div class="intro"><p>Tes sites, en version lecture, gardés sur l’appareil. Lisibles sans réseau.</p></div>
+    <div class="note" id="bnRelay" hidden><div><b>Une étape avant de commencer.</b> Ancre a besoin d’un petit relais gratuit (5 min, une seule fois) pour récupérer les sites. La lecture, elle, n’en a jamais besoin.<br><button class="btn mini primary" data-open-relay>Configurer le relais</button></div></div>
+    <div class="note" id="bnInstall" hidden><div><b>Commence par installer Ancre sur l’écran d’accueil</b> (bouton Partager → « Sur l’écran d’accueil »), puis ouvre-le depuis l’icône. L’appli installée a son propre stockage : ce que tu fais ici dans Safari n’y est pas repris, et Safari peut effacer ses données après quelques jours sans visite.</div><button class="x" id="hideInstall" aria-label="Masquer">×</button></div>
     <div class="storage" id="storage" hidden><span id="stTxt"></span><span class="m"><i id="stBar"></i></span></div>
-    <div class="list" id="jobs"></div>
-    <div class="list" id="sites" style="margin-top:12px"></div>
+    <div class="list" id="sites"></div>
   </div>
   <button class="btn primary fab" id="bAdd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Ajouter un site</button>
 </section>
 
-<!-- Sommaire d'un site -->
+<!-- ═════ Sommaire ═════ -->
 <section id="vSite" hidden>
   <header class="bar">
     <button class="ib" data-go="#/" aria-label="Bibliothèque"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
@@ -210,6 +219,7 @@ button{cursor:pointer;touch-action:manipulation}
   </header>
   <div class="page">
     <div class="head"><h2 id="sTitle"></h2><div class="meta" id="sMeta"></div></div>
+    <div class="note" id="sProg" hidden></div>
     <div class="row"><button class="btn primary" id="bResume">Commencer</button></div>
     <input class="filter" id="sFilter" type="search" placeholder="Chercher un titre ou un mot du texte…" autocomplete="off">
     <div class="toc" id="toc"></div>
@@ -217,7 +227,7 @@ button{cursor:pointer;touch-action:manipulation}
   </div>
 </section>
 
-<!-- Lecteur -->
+<!-- ═════ Lecteur ═════ -->
 <section id="vRead" class="reader" hidden>
   <header class="bar">
     <button class="ib" id="bBackSite" aria-label="Sommaire"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg></button>
@@ -237,17 +247,44 @@ button{cursor:pointer;touch-action:manipulation}
 <div class="sheet" id="shAdd" role="dialog" aria-label="Ajouter un site">
   <div class="grip"></div>
   <h2>Ajouter un site</h2>
-  <p class="sub">Le serveur récupère et compacte le site, puis l’envoie sur l’appareil. Tu peux fermer l’appli pendant ce temps.</p>
+  <p class="sub">À faire en Wi-Fi. Garde l’appli ouverte pendant le téléchargement : si tu la quittes, il reprend où il en était.</p>
   <input class="inp" id="aUrl" type="url" inputmode="url" placeholder="https://exemple.fr" autocapitalize="off" autocorrect="off" spellcheck="false">
   <span class="lbl">Format</span>
   <div class="seg">
-    <label><input type="radio" name="mode" value="text" checked><div><b>Texte seul</b><span>Le plus léger : idéal pour articles, docs, wikis, romans. <em>≈ 2–5 Mo / 1000 pages</em></span></div></label>
-    <label><input type="radio" name="mode" value="images"><div><b>Texte + images légères</b><span>Jusqu’à 4 images par page, réduites et compressées. <em>≈ 30–60 Mo / 1000 pages</em></span></div></label>
+    <label><input type="radio" name="mode" value="text"><div><b>Texte seul</b><span>Le plus léger. Les images sont ignorées. <em>≈ 3 Mo / 1000 pages</em></span></div></label>
+    <label><input type="radio" name="mode" value="light"><div><b>Texte + images légères</b><span>Toutes les images, réduites (720 px). <em>≈ 60 Ko / image</em></span></div></label>
+    <label><input type="radio" name="mode" value="sharp"><div><b>Texte + images nettes</b><span>Toutes les images, petits textes lisibles (1200 px). <em>≈ 180 Ko / image</em></span></div></label>
   </div>
   <span class="lbl">Nombre de pages max</span>
-  <div class="range"><input type="range" id="aMax" min="20" max="3000" step="10" value="500"><output id="aMaxO">500</output></div>
+  <div class="range"><input type="range" id="aMax" min="20" max="5000" step="10" value="500"><output id="aMaxO">500</output></div>
+  <span class="lbl">Place max sur l’appareil pour ce site</span>
+  <div class="opts-row" id="aBudget"><button class="chip" data-mb="100">100 Mo</button><button class="chip" data-mb="300">300 Mo</button><button class="chip" data-mb="1024">1 Go</button><button class="chip" data-mb="0">Sans limite</button></div>
   <label class="chk"><input type="checkbox" id="aSame"> Rester dans le dossier de l’adresse</label>
   <div class="actions"><button class="btn" data-close>Annuler</button><button class="btn primary" id="aGo">Télécharger</button></div>
+</div>
+
+<!-- Relais -->
+<div class="sheet" id="shRelay" role="dialog" aria-label="Relais">
+  <div class="grip"></div>
+  <h2>Le relais</h2>
+  <p class="sub">Un navigateur n’a pas le droit de lire le contenu d’un autre site : c’est ce qui provoquait l’erreur 405. Le relais est un mini-programme gratuit chez Cloudflare qui récupère les pages pour Ancre. Il ne stocke rien et reste privé grâce à ton code. À faire une seule fois.</p>
+  <p class="note" id="rTip" hidden>Conseil : installe d’abord Ancre sur l’écran d’accueil et fais cette étape depuis l’appli installée (elle ne voit pas les réglages faits dans Safari).</p>
+  <ol class="steps">
+    <li><div>Copie le code du relais (il contient déjà ta clé privée).<br><button class="btn mini primary" id="rCopy">Copier le code du relais</button></div></li>
+    <li><div>Ouvre Cloudflare et crée un compte gratuit (pas de carte bancaire).<br><a class="btn mini" href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">Ouvrir Cloudflare</a></div></li>
+    <li><div>Dans <b>Workers &amp; Pages</b> : <b>Create</b> → modèle <b>Hello World</b> → <b>Deploy</b>.</div></li>
+    <li><div><b>Edit code</b> → efface tout le code → colle → <b>Deploy</b>.</div></li>
+    <li><div>Copie l’adresse du Worker (elle finit par <code>workers.dev</code>) et colle-la ici :</div></li>
+  </ol>
+  <input class="inp" id="rUrl" type="url" inputmode="url" placeholder="https://ancre.ton-nom.workers.dev" autocapitalize="off" autocorrect="off" spellcheck="false" style="margin-top:12px">
+  <div class="st" id="rSt"></div>
+  <details class="more-info"><summary>Le bouton « Copier » ne marche pas, ou je réinstalle Ancre ?</summary>
+    <p class="hint">Sélectionne tout le texte ci-dessous et copie-le. Si tu as déjà un relais, tu peux remettre son code ici.</p>
+    <textarea class="codebox" id="rCode" readonly></textarea>
+    <span class="lbl">Code privé</span>
+    <input class="inp" id="rKey" autocapitalize="off" autocorrect="off" spellcheck="false">
+  </details>
+  <div class="actions"><button class="btn" data-close>Fermer</button><button class="btn primary" id="rTest">Tester et enregistrer</button></div>
 </div>
 
 <!-- Affichage -->
@@ -278,322 +315,931 @@ button{cursor:pointer;touch-action:manipulation}
   <div class="actions"><button class="btn" data-close>Fermer</button></div>
 </div>
 
-<!-- Lien non téléchargé -->
+<!-- Lien absent -->
 <div class="sheet" id="shMiss" role="dialog" aria-label="Page absente">
   <div class="grip"></div>
   <h2>Page non téléchargée</h2>
-  <p class="sub">Elle était au-delà de la limite de pages ou de profondeur lors du téléchargement.</p>
+  <p class="sub">Elle dépassait la limite de pages, était exclue par le site, ou n’a pas encore été récupérée.</p>
   <div class="inp" id="mUrl" style="height:auto;padding:12px 14px;font-size:13px;word-break:break-all;line-height:1.45"></div>
   <div class="actions"><button class="btn" data-close>Fermer</button><a class="btn primary" id="mOpen" target="_blank" rel="noopener">Ouvrir en ligne</a></div>
 </div>
 
-<!-- Réglages -->
-<div class="sheet" id="shSettings" role="dialog" aria-label="Réglages">
-  <div class="grip"></div>
-  <h2>Réglages</h2>
-  <p class="sub" id="setInfo"></p>
-  <span class="lbl">Code d’accès du serveur</span>
-  <input class="inp" id="setCode" type="password" placeholder="Seulement si ton serveur en demande un" autocomplete="off">
-  <p class="sub" style="margin-top:14px">Pour l’installer comme une appli : bouton Partager → « Sur l’écran d’accueil ». Les sites restent alors stockés de façon durable.</p>
-  <div class="actions"><button class="btn" data-close>Fermer</button><button class="btn primary" id="setSave">Enregistrer</button></div>
-</div>
-
 <div class="toast" id="toast"></div>
 
+<script src="readability.js"></script>
 <script>
 'use strict';
+/* ═════════════ Utilitaires ═════════════ */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const nf = new Intl.NumberFormat('fr-FR');
+const nf = (n) => new Intl.NumberFormat('fr-FR').format(n || 0);
 const fmtB = (b) => { if (!b) return '0 o'; const u = ['o', 'Ko', 'Mo', 'Go']; const i = Math.min(3, Math.floor(Math.log(b) / Math.log(1024))); return (b / 1024 ** i).toFixed(i > 1 ? 1 : 0).replace('.', ',') + ' ' + u[i]; };
-const hue = (s) => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % 360; };
-const ls = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
-
+const hue = (s) => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % 360; };
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const fail = (code, msg) => Object.assign(new Error(msg), { code });
+const ls = {
+  get(k, d) { try { const v = localStorage.getItem('ancre.' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('ancre.' + k, JSON.stringify(v)); } catch {} },
+};
 let toastT;
-function toast(m, err) { const t = $('#toast'); t.textContent = m; t.className = 'toast on' + (err ? ' err' : ''); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 3200); }
+function toast(m, bad) { const t = $('#toast'); t.textContent = m; t.className = 'toast on' + (bad ? ' err' : ''); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 3600); }
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 
-/* ───── Base locale (IndexedDB) ───── */
+/* ═════════════ Filtres ═════════════ */
+const AD_HOSTS = ['doubleclick.net', 'googlesyndication.com', 'googleadservices.com', 'google-analytics.com', 'googletagmanager.com',
+  'googletagservices.com', 'amazon-adsystem.com', 'adnxs.com', 'criteo.com', 'criteo.net', 'taboola.com', 'outbrain.com',
+  'scorecardresearch.com', 'pubmatic.com', 'rubiconproject.com', 'smartadserver.com', 'teads.tv', 'hotjar.com', 'facebook.net',
+  'clarity.ms', 'mgid.com', 'onetrust.com', 'didomi.io', 'adform.net', 'moatads.com', 'quantserve.com', 'popads.net',
+  'propellerads.com', 'adsterra.com', 'exoclick.com', 'ezoic.net', 'adskeeper.com', 'revcontent.com', 'yieldmo.com'];
+const isAdHost = (h) => { h = String(h).toLowerCase(); return AD_HOSTS.some((d) => h === d || h.endsWith('.' + d)); };
+const AD_SELECTORS = ['ins.adsbygoogle', '[id^="google_ads"]', '[id^="div-gpt-ad"]', '[class*="adsbygoogle"]', '[data-ad]',
+  '[data-ad-slot]', '[data-ad-client]', '[id^="taboola"]', '[id^="outbrain"]', '.OUTBRAIN', '#onetrust-consent-sdk',
+  '#didomi-host', '.cc-window', '#CybotCookiebotDialog', '.qc-cmp2-container', '#cookie-banner', '.cookie-banner',
+  '#cookie-notice', '.cookie-notice', '#tarteaucitronRoot', '#axeptio_overlay'];
+const AD_TOKEN = /^(ad|ads|advert|advertisement|advertising|adsbox|adslot|adunit|adbanner|sponsored|sponsor|dfp|taboola|outbrain|ad[-_].+|.+[-_]ads?|gpt[-_]ad.*|banner[-_]ad.*|pub[-_](banner|container|slot|zone))$/i;
+const PROTECTED = new Set(['html', 'head', 'body', 'main', 'article']);
+const SKIP_LINK = /(\/logout|\/signout|\/deconnexion|wp-login\.php|\/wp-admin|\/wp-json|xmlrpc\.php|add-to-cart|\/cart\b|\/panier|\/checkout|replytocom=|\?share=|\/feed\/?$|\/rss\/?$|\/trackback|\/cdn-cgi\/|[?&](sort|orderby|filter|print)=)/i;
+const NOT_PAGE = /\.(jpe?g|png|gif|webp|avif|svg|ico|bmp|zip|rar|7z|gz|exe|msi|dmg|apk|iso|mp4|mkv|webm|avi|mov|mp3|m4a|flac|wav|ogg|woff2?|ttf|otf|css|js|json|xml|pdf|docx?|xlsx?|pptx?|epub)$/i;
+const TRACKING = /^(utm_\w+|fbclid|gclid|msclkid|mc_cid|mc_eid|_ga|_gl|igshid|ref_src)$/i;
+const KEEP = new Set(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'a', 'strong', 'b',
+  'em', 'i', 'u', 's', 'mark', 'sup', 'sub', 'br', 'hr', 'img', 'figure', 'figcaption', 'table', 'thead', 'tbody', 'tr', 'td', 'th',
+  'dl', 'dt', 'dd', 'small', 'abbr', 'q', 'cite', 'kbd']);
+const ATTRS = { a: ['href'], img: ['src', 'alt'], td: ['colspan', 'rowspan'], th: ['colspan', 'rowspan'], ol: ['start'] };
+const BLOCKISH = /^(div|section|article|main|header|footer|aside|nav|center|details|summary|address|picture|span)$/;
+const LAZY = ['data-src', 'data-lazy-src', 'data-original', 'data-lazy', 'data-url', 'data-hi-res-src', 'data-full-src', 'data-orig-file', 'data-large-file'];
+const PRESETS = { light: { w: 720, q: 0.55, est: 60e3 }, sharp: { w: 1200, q: 0.72, est: 180e3 } };
+
+/* ═════════════ Adresses ═════════════ */
+const bare = (h) => h.toLowerCase().replace(/^www\./, '');
+function cleanUrl(u) {
+  const x = new URL(u);
+  x.hash = '';
+  for (const k of [...x.searchParams.keys()]) if (TRACKING.test(k)) x.searchParams.delete(k);
+  if (![...x.searchParams.keys()].length) x.search = '';
+  return x;
+}
+function pageKey(u) {
+  const x = cleanUrl(u);
+  x.hostname = bare(x.hostname);
+  x.protocol = 'https:';
+  x.pathname = x.pathname.replace(/\/index\.(html?|php)$/i, '/');
+  if (x.pathname.length > 1 && x.pathname.endsWith('/')) x.pathname = x.pathname.slice(0, -1);
+  return x.href;
+}
+function inScope(s, u) {
+  let x; try { x = new URL(u); } catch { return false; }
+  if (!/^https?:$/.test(x.protocol) || bare(x.hostname) !== s.root) return false;
+  return !s.prefix || x.pathname.startsWith(s.prefix);
+}
+
+/* ═════════════ Stockage local (IndexedDB) ═════════════ */
 const DB = (() => {
   let p;
   const open = () => p || (p = new Promise((res, rej) => {
-    const r = indexedDB.open('ancre', 1);
-    r.onupgradeneeded = () => { const d = r.result; d.createObjectStore('sites', { keyPath: 'id' }); d.createObjectStore('pages'); d.createObjectStore('imgs'); };
-    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    const r = indexedDB.open('ancre-v3', 1);
+    r.onupgradeneeded = () => {
+      const d = r.result;
+      if (!d.objectStoreNames.contains('sites')) d.createObjectStore('sites', { keyPath: 'id' });
+      for (const n of ['pages', 'imgs', 'meta']) if (!d.objectStoreNames.contains(n)) d.createObjectStore(n);
+    };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
   }));
   const tx = async (store, mode, fn) => {
     const d = await open();
     return new Promise((res, rej) => {
-      const t = d.transaction(store, mode); const req = fn(t.objectStore(store));
-      t.oncomplete = () => res(req && 'result' in req ? req.result : undefined);
-      t.onerror = () => rej(t.error); t.onabort = () => rej(t.error || new Error('Stockage plein ?'));
+      const t = d.transaction(store, mode);
+      const req = fn(t.objectStore(store));
+      t.oncomplete = () => res(req ? req.result : undefined);
+      t.onerror = () => rej(t.error);
+      t.onabort = () => rej(t.error || fail('quota', 'Stockage plein'));
     });
   };
-  const range = (id) => IDBKeyRange.bound([id, 0], [id, Infinity]);
+  const range = (id) => IDBKeyRange.bound([id], [id, []]);
   return {
     get: (s, k) => tx(s, 'readonly', (o) => o.get(k)),
     all: (s) => tx(s, 'readonly', (o) => o.getAll()),
-    put: (s, v, k) => tx(s, 'readwrite', (o) => k === undefined ? o.put(v) : o.put(v, k)),
-    putMany: (s, entries) => tx(s, 'readwrite', (o) => { for (const [k, v] of entries) o.put(v, k); }),
-    pagesOf: (id) => tx('pages', 'readonly', (o) => o.getAll(range(id))),
+    put: (s, v, k) => tx(s, 'readwrite', (o) => (k === undefined ? o.put(v) : o.put(v, k))),
+    del: (s, k) => tx(s, 'readwrite', (o) => o.delete(k)),
+    putMany: (s, entries) => tx(s, 'readwrite', (o) => { let r; for (const [k, v] of entries) r = o.put(v, k); return r; }),
+    async pagesMap(id) {
+      const d = await open();
+      return new Promise((res, rej) => {
+        const o = d.transaction('pages').objectStore('pages');
+        const rk = o.getAllKeys(range(id)), rv = o.getAll(range(id));
+        o.transaction.oncomplete = () => res(new Map(rk.result.map((k, j) => [k[1], rv.result[j]])));
+        o.transaction.onerror = () => rej(o.transaction.error);
+      });
+    },
+    imgsOf: (id) => tx('imgs', 'readonly', (o) => o.getAll(range(id))),
+    async patch(id, obj) {
+      const d = await open();
+      return new Promise((res, rej) => {
+        const t = d.transaction('sites', 'readwrite'), o = t.objectStore('sites'), g = o.get(id);
+        let out;
+        g.onsuccess = () => { if (g.result) { out = Object.assign(g.result, obj); o.put(out); } };
+        t.oncomplete = () => res(out);
+        t.onerror = () => rej(t.error);
+        t.onabort = () => rej(t.error || fail('quota', 'Stockage plein'));
+      });
+    },
     async dropSite(id) {
-      await tx('pages', 'readwrite', (o) => o.delete(range(id)));
-      await tx('imgs', 'readwrite', (o) => o.delete(range(id)));
-      await tx('sites', 'readwrite', (o) => o.delete(id));
+      const d = await open();
+      return new Promise((res, rej) => {
+        const t = d.transaction(['pages', 'imgs', 'meta', 'sites'], 'readwrite');
+        for (const n of ['pages', 'imgs', 'meta']) t.objectStore(n).delete(range(id));
+        t.objectStore('sites').delete(id);
+        t.oncomplete = () => res();
+        t.onerror = () => rej(t.error);
+      });
     },
   };
 })();
 
-/* compression gzip native (Safari 16.4+, Chrome, Firefox) */
-const CAN_GZ = 'CompressionStream' in window;
-async function gz(str) { return new Response(new Blob([str]).stream().pipeThrough(new CompressionStream('gzip'))).blob(); }
-async function ungz(blob) { return new Response(blob.stream().pipeThrough(new DecompressionStream('gzip'))).text(); }
-const pageHtml = async (rec) => rec.z ? ungz(rec.z) : rec.h;
+const CAN_GZ = typeof CompressionStream === 'function' && typeof DecompressionStream === 'function';
+const gz = (s) => (CAN_GZ ? new Response(new Blob([s]).stream().pipeThrough(new CompressionStream('gzip'))).blob() : Promise.resolve(s));
+const sizeOf = (v) => (typeof v === 'string' ? v.length * 2 : v?.size || 0);
+const pageHtml = async (v) => (v == null ? null : typeof v === 'string' ? v : new Response(v.stream().pipeThrough(new DecompressionStream('gzip'))).text());
 
-/* ───── Serveur ───── */
-const api = async (p, o = {}) => {
-  let r;
+/* ═════════════ Relais ═════════════ */
+const getRelay = () => String(ls.get('relay', '') || '').trim().replace(/\/+$/, '');
+function randCode() { const a = new Uint8Array(16); crypto.getRandomValues(a); return [...a].map((b) => 'abcdefghjkmnpqrstuvwxyz23456789'[b % 31]).join(''); }
+if (!ls.get('relayCode', '')) ls.set('relayCode', randCode());
+let RELAY_SRC = '';
+fetch('relais.js', { cache: 'no-cache' }).then((r) => (r.ok ? r.text() : '')).then((t) => { RELAY_SRC = t; }).catch(() => {});
+const relaySource = () => RELAY_SRC.replace('__CODE__', ls.get('relayCode', ''));
+
+async function relayGet(url, { type = 'html', ref = '', as = 'buffer', timeout = 30000 } = {}) {
+  const relay = getRelay();
+  if (!relay) throw fail('norelay', 'Relais non configuré');
+  const q = new URLSearchParams({ k: ls.get('relayCode', ''), t: type, u: url });
+  if (ref) q.set('r', ref);
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), timeout);
   try {
-    r = await fetch(p, { ...o, headers: { 'content-type': 'application/json', 'x-ancre-code': ls.get('code', ''), ...(o.headers || {}) }, body: o.body && typeof o.body !== 'string' ? JSON.stringify(o.body) : o.body });
-  } catch { throw new Error('Serveur injoignable. Vérifie ta connexion.'); }
-  if (o.raw) { if (!r.ok) throw new Error('Erreur ' + r.status); return r; }
-  if (!(r.headers.get('content-type') || '').includes('json')) throw new Error(`Le serveur Ancre ne répond pas (erreur ${r.status}). Il ne fonctionne pas sur GitHub Pages : voir le README.`);
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) { const e = new Error(j.error || 'Erreur ' + r.status); e.status = r.status; throw e; }
-  return j;
-};
+    let res;
+    try { res = await fetch(relay + '/?' + q, { signal: ctl.signal, cache: 'no-store', referrerPolicy: 'no-referrer' }); }
+    catch { throw fail('net', ctl.signal.aborted ? 'Délai dépassé' : 'Relais injoignable'); }
+    const own = !res.headers.get('x-status'); // réponse du relais lui-même (pas du site)
+    if (res.status === 401 && own) throw fail('auth', 'Code du relais refusé');
+    const out = { ok: res.ok, status: res.status, unreachable: own && res.status === 502, finalUrl: res.headers.get('x-final-url') || url, ct: (res.headers.get('content-type') || '').toLowerCase() };
+    if (!res.ok) { try { await res.body?.cancel(); } catch {} return out; }
+    try { out.data = as === 'blob' ? await res.blob() : as === 'text' ? await res.text() : await res.arrayBuffer(); }
+    catch { throw fail('net', 'Téléchargement interrompu'); }
+    return out;
+  } finally { clearTimeout(timer); }
+}
+const WHY = { 401: ' (connexion requise)', 403: ' (accès refusé par le site)', 404: ' (introuvable)', 405: ' (le site bloque les robots)', 429: ' (trop de requêtes)', 451: ' (bloqué)', 503: ' (indisponible ou protégé)' };
 
-/* ───── Réseau ───── */
-function net() { const on = navigator.onLine; const n = $('#net'); n.textContent = on ? 'En ligne' : 'Hors ligne'; n.classList.toggle('off', !on); }
-addEventListener('online', () => { net(); pollJobs(); }); addEventListener('offline', net); net();
-
-/* ───── Feuilles ───── */
-let openSheet = null;
-function sheet(id) { closeSheet(); openSheet = $(id); openSheet.classList.add('on'); $('#sheetBg').classList.add('on'); }
-function closeSheet() { if (openSheet) openSheet.classList.remove('on'); openSheet = null; $('#sheetBg').classList.remove('on'); }
-$('#sheetBg').onclick = closeSheet;
-document.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) closeSheet(); const g = e.target.closest('[data-go]'); if (g) location.hash = g.dataset.go; });
-
-/* ───── Bibliothèque ───── */
-let sites = [];
-async function loadSites() { sites = (await DB.all('sites')).sort((a, b) => (b.readAt || b.at) - (a.readAt || a.at)); }
-
-async function renderLib() {
-  await loadSites();
-  const box = $('#sites');
-  if (!sites.length && !jobsList().length) {
-    box.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v13M7.5 10.5h9M4 14c1 4 4.2 6 8 6s7-2 8-6"/></svg><h2>Rien à lire pour l’instant</h2><p>Ajoute un site en Wi-Fi : il sera ensuite lisible partout, même sans réseau.</p></div>`;
-  } else {
-    box.innerHTML = sites.map((s) => {
-      const pct = s.last != null ? Math.round(((s.last + 1) / s.count) * 100) : 0;
-      return `<div class="card" data-id="${esc(s.id)}" style="--h:hsl(${hue(s.root)} 36% 40%)">
-        <div class="main" data-open><div class="mark">${esc((s.title || s.root).trim().charAt(0).toUpperCase())}</div>
-        <div class="txt"><h3>${esc(s.title)}</h3><div class="meta">${esc(s.root)}</div></div>
-        <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div>
-        <div class="foot"><span>${nf.format(s.count)} pages</span><span>· ${fmtB(s.bytes)}</span><span class="sp"></span>${s.mode === 'images' ? '<span class="tag">images</span>' : '<span class="tag">texte</span>'}${pct ? `<span>${pct} %</span>` : ''}</div>
-        ${pct ? `<div class="prog"><i style="width:${pct}%"></i></div>` : ''}
-      </div>`;
-    }).join('');
+/* ═════════════ robots.txt ═════════════ */
+async function loadRobots(start) {
+  try {
+    const r = await relayGet(new URL('/robots.txt', start).href, { type: 'txt', as: 'text', timeout: 15000 });
+    return r.ok && r.data && !/<html/i.test(r.data.slice(0, 500)) ? parseRobots(r.data) : [];
+  } catch (e) { if (e.code === 'auth' || e.code === 'norelay') throw e; return []; }
+}
+function parseRobots(txt) {
+  const rules = []; let applies = false, inUa = false;
+  for (const raw of txt.split(/\r?\n/)) {
+    const m = /^([\w-]+)\s*:\s*(.*)$/.exec(raw.replace(/#.*/, '').trim());
+    if (!m) continue;
+    const k = m[1].toLowerCase(), v = m[2].trim();
+    if (k === 'user-agent') { if (!inUa) applies = false; inUa = true; if (v === '*') applies = true; continue; }
+    inUa = false;
+    if (applies && (k === 'allow' || k === 'disallow') && v) rules.push([k === 'allow' ? 1 : 0, v]);
   }
-  storageInfo();
+  return rules.slice(0, 400);
 }
-$('#sites').onclick = (e) => { const c = e.target.closest('.card'); if (c && e.target.closest('[data-open]')) location.hash = '#/s/' + c.dataset.id; };
-
-async function storageInfo() {
-  const total = sites.reduce((a, s) => a + (s.bytes || 0), 0);
-  if (!sites.length) { $('#storage').hidden = true; return; }
-  $('#storage').hidden = false;
-  let quota = 0; try { quota = (await navigator.storage.estimate()).quota || 0; } catch {}
-  $('#stTxt').textContent = `${sites.length} site${sites.length > 1 ? 's' : ''} · ${fmtB(total)}`;
-  $('#stBar').style.width = quota ? Math.max(1, Math.min(100, total / quota * 100)) + '%' : '2%';
+const reCache = new Map();
+const robotRe = (v) => { let r = reCache.get(v); if (!r) { r = new RegExp('^' + v.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\\\$$/, '$')); reCache.set(v, r); } return r; };
+function robotsOk(rules, u) {
+  if (!rules || !rules.length) return true;
+  const x = new URL(u), path = x.pathname + x.search;
+  let best = null;
+  for (const [allow, v] of rules) if (robotRe(v).test(path) && (!best || v.length > best[1].length || (v.length === best[1].length && allow))) best = [allow, v];
+  return !best || !!best[0];
 }
 
-/* ───── Ajouter / téléchargements ───── */
-const jobsList = () => ls.get('jobs', []);
-const setJobs = (l) => ls.set('jobs', l);
-let jobState = {}; // id → dernier état connu
-const savedOpts = ls.get('addOpts', { mode: 'text', maxPages: 500, samePath: false });
+/* ═════════════ Extraction du contenu ═════════════ */
+function decodeHtml(buf, ct) {
+  let cs = (/charset=["']?([\w-]+)/i.exec(ct || '') || [])[1];
+  if (!cs) cs = (/<meta[^>]+charset=["']?([\w-]+)/i.exec(new TextDecoder('windows-1252').decode(buf.slice(0, 4096))) || [])[1];
+  try { return new TextDecoder((cs || 'utf-8').toLowerCase()).decode(buf); } catch { return new TextDecoder().decode(buf); }
+}
+function pickSrcset(v, target = 1200) {
+  const c = [];
+  for (const part of String(v).split(/,\s+(?=\S)/)) {
+    const [u, d] = part.trim().split(/\s+/);
+    if (!u || /^data:/i.test(u)) continue;
+    let w = 0, x = 0;
+    if (d && /w$/i.test(d)) w = parseFloat(d); else x = d && /x$/i.test(d) ? parseFloat(d) : 1;
+    c.push({ u: u.replace(/,$/, ''), w, x });
+  }
+  if (!c.length) return null;
+  const ws = c.filter((k) => k.w).sort((a, b) => a.w - b.w);
+  if (ws.length) return (ws.find((k) => k.w >= target) || ws[ws.length - 1]).u;
+  const xs = c.sort((a, b) => a.x - b.x);
+  return (xs.find((k) => k.x >= 2) || xs[xs.length - 1]).u;
+}
+function fixImages(doc) {
+  // images de secours placées dans <noscript> (sites à chargement différé)
+  for (const ns of [...doc.querySelectorAll('noscript')]) {
+    if (!ns.querySelector('img')) continue;
+    const prev = ns.previousElementSibling;
+    if (prev && prev.localName === 'img' && !LAZY.some((k) => prev.getAttribute(k)) && !prev.getAttribute('data-srcset')) {
+      const s = prev.getAttribute('src') || '';
+      if (!s || /^data:|placeholder|blank|spacer|lazy|pixel|transparent/i.test(s)) prev.remove();
+    }
+    ns.replaceWith(...ns.childNodes);
+  }
+  for (const img of [...doc.querySelectorAll('img')]) {
+    const src = img.getAttribute('src') || '';
+    const weak = !src || /^data:|placeholder|blank|spacer|lazy|pixel|transparent|loading|1x1/i.test(src);
+    let lazy = null;
+    for (const k of LAZY) { const v = img.getAttribute(k); if (v && !/^data:/i.test(v)) { lazy = v; break; } }
+    const pic = img.parentElement && img.parentElement.localName === 'picture' ? img.parentElement : null;
+    let ss = img.getAttribute('data-srcset') || img.getAttribute('data-lazy-srcset') || img.getAttribute('srcset');
+    let best = ss ? pickSrcset(ss) : null;
+    if (!best && pic) { const so = pic.querySelector('source[data-srcset], source[srcset]'); if (so) best = pickSrcset(so.getAttribute('data-srcset') || so.getAttribute('srcset')); }
+    const chosen = best || lazy || (weak ? null : src);
+    if (chosen) img.setAttribute('src', chosen); else img.removeAttribute('src');
+    for (const a of ['srcset', 'sizes', 'data-srcset', 'data-lazy-srcset', 'loading', ...LAZY]) img.removeAttribute(a);
+    if (pic) pic.replaceWith(img);
+  }
+}
+function cleanDoc(doc) {
+  const kill = (el) => { if (el && !PROTECTED.has(el.localName)) el.remove(); };
+  doc.querySelectorAll('script, style, noscript, iframe, frame, frameset, embed, object, applet, svg, canvas, form, input, button, select, textarea, template, link, dialog').forEach((e) => e.remove());
+  doc.querySelectorAll(AD_SELECTORS.join(',')).forEach(kill);
+  for (const el of [...doc.querySelectorAll('[class], [id]')]) {
+    if (PROTECTED.has(el.localName)) continue;
+    const toks = [...el.classList, el.id];
+    if (toks.some((t) => t && AD_TOKEN.test(t))) el.remove();
+  }
+  doc.querySelectorAll('[hidden], [aria-hidden="true"], [style*="display:none"], [style*="display: none"]').forEach(kill);
+  for (const im of [...doc.querySelectorAll('img')]) {
+    const w = im.getAttribute('width'), h = im.getAttribute('height');
+    if ((w && +w <= 2) || (h && +h <= 2)) im.remove();
+  }
+  for (const el of [...doc.querySelectorAll('a[href], img[src]')]) {
+    try { if (isAdHost(new URL(el.getAttribute('href') || el.getAttribute('src'), 'https://x.invalid').hostname)) el.remove(); } catch {}
+  }
+}
+function sanitize(html, base, mode) {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html;
+  const D = tpl.content.ownerDocument; // document inerte : rien n’y est chargé
+  const imgs = [], seen = new Set();
+  const walk = (node) => {
+    for (const el of [...node.childNodes]) {
+      if (el.nodeType === 8) { el.remove(); continue; }
+      if (el.nodeType !== 1) continue;
+      const tag = el.localName;
+      if (!KEEP.has(tag)) {
+        walk(el);
+        const frag = D.createDocumentFragment();
+        const block = BLOCKISH.test(tag) && tag !== 'span';
+        if (block) frag.append(' ');
+        frag.append(...el.childNodes);
+        if (block) frag.append(' ');
+        el.replaceWith(frag);
+        continue;
+      }
+      const keep = ATTRS[tag] || [];
+      for (const a of [...el.attributes]) if (!keep.includes(a.name)) el.removeAttribute(a.name);
+      if (tag === 'a') {
+        const h = el.getAttribute('href');
+        if (h) {
+          let u = null; try { u = new URL(h, base); } catch {}
+          if (u && /^(https?|mailto|tel):$/.test(u.protocol) && !/^#/.test(h)) el.setAttribute('href', u.href); else el.removeAttribute('href');
+        }
+      } else if (tag === 'img') {
+        let abs = null;
+        try { const s = el.getAttribute('src'); if (s && !/^data:/i.test(s)) abs = new URL(s, base).href; } catch {}
+        el.removeAttribute('src');
+        if (!abs || isAdHost(new URL(abs).hostname) || seen.has(abs) || imgs.length >= 200) { el.remove(); continue; }
+        if (mode === 'text') {
+          const alt = (el.getAttribute('alt') || '').trim();
+          if (alt.length >= 4) { const i = D.createElement('i'); i.textContent = `[image : ${alt.slice(0, 120)}]`; el.replaceWith(i); } else el.remove();
+          continue;
+        }
+        seen.add(abs); imgs.push(abs);
+        el.setAttribute('data-u', abs);
+        continue;
+      }
+      walk(el);
+    }
+  };
+  walk(tpl.content);
+  for (const el of [...tpl.content.querySelectorAll('p, li, h1, h2, h3, h4, h5, h6, figcaption, blockquote, figure, a, strong, em, b, i')]) {
+    if (!el.textContent.trim() && !el.querySelector('img') && el.isConnected) el.remove();
+  }
+  let out = tpl.innerHTML;
+  if (!/<pre/i.test(out)) out = out.replace(/\s+/g, ' ');
+  return { html: out.trim(), imgs };
+}
+function extract(html, url, mode) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  let base = url;
+  const b = doc.querySelector('base[href]');
+  if (b) { try { base = new URL(b.getAttribute('href'), url).href; } catch {} }
+  doc.querySelectorAll('base').forEach((e) => e.remove());
+  const be = doc.createElement('base'); be.setAttribute('href', base);
+  (doc.head || doc.documentElement).prepend(be);
+  const title = (doc.querySelector('meta[property="og:title"]')?.getAttribute('content') || doc.title || doc.querySelector('h1')?.textContent || '').replace(/\s+/g, ' ').trim();
+  fixImages(doc);
+  cleanDoc(doc);
+  const links = [];
+  for (const a of doc.querySelectorAll('a[href]')) {
+    try { const u = new URL(a.getAttribute('href'), base); if (/^https?:$/.test(u.protocol)) { u.hash = ''; links.push(u.href); } } catch {}
+  }
+  let mainEl = null;
+  for (const sel of ['main', '[role=main]', 'article', '#content', '.content', '#main', '.main']) { mainEl = doc.querySelector(sel); if (mainEl) break; }
+  mainEl = mainEl || doc.body;
+  let fallback = '';
+  if (mainEl) {
+    const c = mainEl.cloneNode(true);
+    c.querySelectorAll('nav, header, footer, aside, [role=navigation], [role=banner], [role=contentinfo], [role=complementary]').forEach((e) => e.remove());
+    fallback = c.innerHTML;
+  }
+  let content = '', rTitle = '';
+  try {
+    const art = new Readability(doc.cloneNode(true), { charThreshold: 250, keepClasses: false }).parse();
+    if (art && art.content && (art.textContent || '').trim().length > 200) { content = art.content; rTitle = art.title || ''; }
+  } catch {}
+  if (mode !== 'text' && content && fallback) {
+    const count = (h) => (h.match(/<img\b/gi) || []).length;
+    const ci = count(content), fi = count(fallback);
+    if (fi >= 3 && ci < fi * 0.5) content = fallback; // pages riches en images : on garde toutes les images
+  }
+  if (!content) content = fallback;
+  const out = sanitize(content, base, mode);
+  return { title: (rTitle || title).slice(0, 300), content: out.html, links, imgs: out.imgs };
+}
 
-$('#bAdd').onclick = () => {
-  $(`input[name=mode][value=${savedOpts.mode}]`).checked = true;
-  $('#aMax').value = savedOpts.maxPages; $('#aMaxO').textContent = nf.format(savedOpts.maxPages);
-  $('#aSame').checked = savedOpts.samePath;
-  sheet('#shAdd'); setTimeout(() => $('#aUrl').focus(), 250);
-};
-$('#aMax').oninput = () => $('#aMaxO').textContent = nf.format($('#aMax').value);
-$('#aGo').onclick = () => startJob($('#aUrl').value.trim(), {
-  mode: $('input[name=mode]:checked').value, maxPages: +$('#aMax').value, samePath: $('#aSame').checked,
+/* ═════════════ Réduction des images (sur l’appareil) ═════════════ */
+async function decodeImg(blob) {
+  if (typeof createImageBitmap === 'function') {
+    try { const b = await createImageBitmap(blob); return { src: b, w: b.width, h: b.height, done: () => b.close && b.close() }; } catch {}
+  }
+  const url = URL.createObjectURL(blob);
+  try {
+    const im = new Image(); im.src = url; await im.decode();
+    return { src: im, w: im.naturalWidth, h: im.naturalHeight, done: () => URL.revokeObjectURL(url) };
+  } catch { URL.revokeObjectURL(url); return null; }
+}
+async function shrink(blob, P, cv) {
+  if (/svg/i.test(blob.type)) return blob.size < 300e3 ? blob : null;
+  const d = await decodeImg(blob);
+  if (!d) return null;
+  if (!d.w || !d.h) { d.done(); return null; }
+  if (d.w < 48 || d.h < 48) { d.done(); return 'tiny'; }
+  let sc = Math.min(1, P.w / d.w);
+  if (d.w * sc * d.h * sc > 12e6) sc = Math.sqrt(12e6 / (d.w * d.h));
+  const W = Math.max(1, Math.round(d.w * sc)), H = Math.max(1, Math.round(d.h * sc));
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+  ctx.imageSmoothingQuality = 'high';
+  try { ctx.drawImage(d.src, 0, 0, W, H); } catch { d.done(); return null; }
+  d.done();
+  const out = await new Promise((r) => cv.toBlob(r, 'image/jpeg', P.q));
+  cv.width = cv.height = 1;
+  if (!out) return null;
+  if (sc === 1 && blob.size <= out.size && /^image\/(jpeg|png|webp|gif|avif)/i.test(blob.type)) return blob;
+  return out;
+}
+
+/* ═════════════ Moteur de téléchargement ═════════════ */
+const RUN = new Map();   // id → contrôleur
+const backoff = new Map();
+let wakeLock = null;
+async function wake(on) {
+  try {
+    if (on && !wakeLock && 'wakeLock' in navigator && document.visibilityState === 'visible') {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
+    } else if (!on && wakeLock) { const w = wakeLock; wakeLock = null; await w.release(); }
+  } catch {}
+}
+const note = (log, level, msg) => { log.push({ level, msg }); while (log.length > 8) log.shift(); };
+
+async function runSite(id) {
+  if (RUN.has(id)) return;
+  let resolveDone;
+  const ctl = { stop: false, reason: '', done: new Promise((r) => { resolveDone = r; }) };
+  RUN.set(id, ctl);
+  wake(true); bump();
+  try {
+    let s = await DB.patch(id, { waiting: false });
+    if (!s) return;
+    if (s.phase === 'pages') await crawlPages(id, ctl);
+    s = await DB.get('sites', id);
+    if (s && !ctl.stop && !s.error && s.phase === 'images') await fetchImages(id, ctl);
+  } catch (e) {
+    const msg = e.code === 'auth' ? 'Code du relais refusé : refais la configuration du relais (⚙︎).'
+      : e.code === 'norelay' ? 'Relais non configuré.'
+      : e.code === 'quota' || e.name === 'QuotaExceededError' ? 'Plus assez de place sur l’appareil.' : (e.message || 'Erreur inconnue');
+    await DB.patch(id, { error: msg }).catch(() => {});
+  } finally {
+    RUN.delete(id);
+    if (!RUN.size) wake(false);
+    resolveDone();
+    bump();
+    const s = await DB.get('sites', id).catch(() => null);
+    if (s && s.waiting) {
+      const d = Math.min(120e3, (backoff.get(id) || 4000) * 2);
+      backoff.set(id, d);
+      setTimeout(resumeAll, d);
+    } else backoff.delete(id);
+  }
+}
+function resumeAll() {
+  if (!navigator.onLine || !getRelay()) return;
+  DB.all('sites').then((list) => {
+    for (const s of list) if (s.phase !== 'done' && !s.paused && !s.error && !RUN.has(s.id)) runSite(s.id);
+  });
+}
+async function stopRun(id, reason) {
+  const c = RUN.get(id);
+  if (!c) return;
+  c.stop = true; c.reason = reason;
+  await c.done;
+}
+
+async function crawlPages(id, ctl) {
+  const s = await DB.get('sites', id);
+  const o = s.opts;
+  let st = await DB.get('meta', [id, 'crawl']);
+  const toc = (await DB.get('meta', [id, 'toc'])) || [];
+  const alias = (await DB.get('meta', [id, 'alias'])) || {};
+  const imgq = (await DB.get('meta', [id, 'imgq'])) || [];
+  const log = s.log || [];
+  let textBytes = s.textBytes || 0, errors = s.errors || 0, title = s.title || '';
+  if (!st) {
+    note(log, 'info', 'Départ : ' + s.url);
+    st = { queue: [[s.url, 0, 0]], seen: [pageKey(s.url)], rules: await loadRobots(s.url), seq: 1 };
+  }
+  const seen = new Set(st.seen), queue = st.queue, rules = st.rules || [];
+  let seq = st.seq || queue.length + toc.length + 1; // ordre de découverte = ordre de lecture
+  const keyIndex = new Map(toc.map((t, i) => [t[2], i]));
+  const imgSeen = new Set(imgq.map((x) => x[0]));
+  let inflight = 0, netFails = 0, sinceSave = 0, budgetStop = false;
+
+  const persist = async (extra = {}) => {
+    await DB.putMany('meta', [[[id, 'crawl'], { queue, seen: [...seen], rules, seq }], [[id, 'toc'], toc], [[id, 'alias'], alias], [[id, 'imgq'], imgq]]);
+    await DB.patch(id, { count: toc.length, textBytes, errors, title, imgTotal: imgq.length, log: log.slice(), ...extra });
+    bump();
+  };
+  const enqueue = (u, depth) => {
+    let k; try { k = pageKey(u); } catch { return; }
+    if (seen.has(k) || !inScope(s, u) || SKIP_LINK.test(u)) return;
+    if (NOT_PAGE.test(new URL(u).pathname)) return;
+    seen.add(k);
+    if (!robotsOk(rules, u)) return;
+    queue.push([cleanUrl(u).href, depth, seq++]);
+  };
+  const one = async (item) => {
+    const [url, depth, order] = item;
+    let r;
+    try { r = await relayGet(url, { type: 'html', as: 'buffer', timeout: 30000 }); netFails = 0; }
+    catch (e) {
+      if (e.code === 'auth' || e.code === 'norelay') throw e;
+      netFails++;
+      queue.unshift(item);
+      if (netFails >= 4) { ctl.stop = true; ctl.reason = 'net'; }
+      return;
+    }
+    if (!r.ok) {
+      // adresse tapée sans « http » : si https ne répond pas, on essaie http
+      if (r.unreachable && depth === 0 && !toc.length && s.schemeGuessed && /^https:/i.test(url)) {
+        const h = 'http:' + url.slice(6);
+        s.url = h; s.schemeGuessed = false;
+        await DB.patch(id, { url: h, schemeGuessed: false });
+        rules.splice(0, rules.length, ...(await loadRobots(h))); // robots.txt relu en http
+        queue.unshift([h, 0, order]);
+        return;
+      }
+      errors++;
+      note(log, 'error', r.unreachable ? `Site injoignable : ${url}` : `HTTP ${r.status}${WHY[r.status] || ''} : ${url}`);
+      return;
+    }
+    const final = r.finalUrl || url;
+    if (!inScope(s, final)) return;
+    if (r.ct && !/html|xml/.test(r.ct)) return;
+    if (!r.data || r.data.byteLength > 8e6) return;
+    const out = extract(decodeHtml(r.data, r.ct), final, o.mode);
+    const k = pageKey(final), k0 = pageKey(url);
+    if (keyIndex.has(k)) { if (k0 !== k) alias[k0] = keyIndex.get(k); return; }
+    if (toc.length >= o.maxPages) return;
+    const i = toc.length;
+    let path = new URL(final).pathname; try { path = decodeURIComponent(path); } catch {}
+    toc.push([out.title || path, final, k, order ?? i]);
+    keyIndex.set(k, i);
+    if (k0 !== k) alias[k0] = i;
+    if (!title) title = out.title;
+    const z = await gz(out.content);
+    await DB.put('pages', z, [id, i]);
+    textBytes += sizeOf(z);
+    for (const im of out.imgs) if (!imgSeen.has(im)) { imgSeen.add(im); imgq.push([im, i]); }
+    if (depth < o.maxDepth) for (const l of out.links) enqueue(l, depth + 1);
+    if (o.budgetMB && textBytes > o.budgetMB * 1048576) budgetStop = true;
+    if (++sinceSave >= (toc.length > 400 ? 25 : 8)) { sinceSave = 0; await persist(); }
+  };
+  const worker = async () => {
+    while (!ctl.stop && !budgetStop) {
+      if (toc.length + inflight >= o.maxPages) { if (!inflight) break; await sleep(150); continue; }
+      const item = queue.shift();
+      if (!item) { if (!inflight) break; await sleep(150); continue; }
+      inflight++;
+      try { await one(item); }
+      catch (e) {
+        if (e.code === 'auth' || e.code === 'norelay') { ctl.stop = true; ctl.reason = e.code; }
+        else if (e.code === 'quota' || e.name === 'QuotaExceededError') { ctl.stop = true; ctl.reason = 'quota'; }
+        else { errors++; note(log, 'error', `${e.message || 'Erreur'} : ${item[0]}`); }
+      } finally { inflight--; }
+      await sleep(60);
+    }
+  };
+  await persist();
+  await Promise.all([worker(), worker(), worker(), worker()]);
+
+  if (ctl.reason === 'auth' || ctl.reason === 'norelay') return persist({ error: 'Code du relais refusé : refais la configuration du relais (⚙︎).' });
+  if (ctl.reason === 'quota') return persist({ error: 'Plus assez de place sur l’appareil.' });
+  if (ctl.reason === 'net') { note(log, 'warn', 'Connexion perdue : reprise automatique.'); return persist({ waiting: true }); }
+  if (ctl.stop) return persist({ paused: ctl.reason === 'pause' });
+  if (!toc.length) {
+    const last = log.filter((l) => l.level === 'error').slice(-1)[0];
+    const msg = !last ? 'Aucune page récupérée.' : last.msg.startsWith('Site injoignable') ? last.msg + ' — vérifie l’adresse.' : 'Le site a refusé : ' + last.msg;
+    return persist({ error: msg });
+  }
+  note(log, 'info', `${nf(toc.length)} pages enregistrées${budgetStop ? ' (limite de place atteinte)' : ''}.`);
+  await persist({ phase: o.mode === 'text' || !imgq.length ? 'done' : 'images', budgetHit: budgetStop });
+  await DB.del('meta', [id, 'crawl']);
+  if (s.replaces) await finishReplace(id, s.replaces);
+}
+
+async function fetchImages(id, ctl) {
+  const s = await DB.get('sites', id);
+  const P = PRESETS[s.opts.mode] || PRESETS.light;
+  const imgq = (await DB.get('meta', [id, 'imgq'])) || [];
+  const toc = (await DB.get('meta', [id, 'toc'])) || [];
+  const budget = s.opts.budgetMB ? s.opts.budgetMB * 1048576 : Infinity;
+  const log = s.log || [];
+  let next = s.imgNext || 0, done = s.imgDone || 0, failed = s.imgFailed || 0, bytes = s.imgBytes || 0;
+  let netFails = 0, sinceSave = 0;
+  const inflight = new Set(), retry = [];
+  const persist = (extra = {}) => DB.patch(id, {
+    imgNext: Math.min(next, ...inflight, ...retry), imgDone: done, imgFailed: failed, imgBytes: bytes, imgTotal: imgq.length, log: log.slice(), ...extra,
+  }).then(bump);
+  const one = async (idx, cv) => {
+    const [u, pi] = imgq[idx];
+    if (await DB.get('imgs', [id, u])) return;
+    const ref = (typeof pi === 'number' ? toc[pi]?.[1] : pi) || s.url;
+    let r;
+    try { r = await relayGet(u, { type: 'img', ref, as: 'blob', timeout: 60000 }); netFails = 0; }
+    catch (e) {
+      if (e.code === 'auth' || e.code === 'norelay') throw e;
+      netFails++; retry.push(idx);
+      if (netFails >= 5) { ctl.stop = true; ctl.reason = 'net'; }
+      return;
+    }
+    if (!r.ok || !r.data || (r.ct && !/^image\/|octet-stream|binary/.test(r.ct)) || r.data.size > 30e6) { failed++; return; }
+    const out = await shrink(r.data, P, cv);
+    if (!out || out === 'tiny') { failed++; return; }
+    if (s.textBytes + bytes + out.size > budget) { ctl.stop = true; ctl.reason = 'budget'; return; }
+    await DB.put('imgs', out, [id, u]);
+    bytes += out.size; done++;
+  };
+  const worker = async () => {
+    const cv = document.createElement('canvas');
+    while (!ctl.stop) {
+      let idx;
+      if (next < imgq.length) idx = next++;
+      else if (retry.length) { idx = retry.shift(); await sleep(800); }
+      else break;
+      inflight.add(idx);
+      try { await one(idx, cv); }
+      catch (e) {
+        if (e.code === 'auth' || e.code === 'norelay') { ctl.stop = true; ctl.reason = e.code; }
+        else if (e.code === 'quota' || e.name === 'QuotaExceededError') { ctl.stop = true; ctl.reason = 'quota'; }
+        else failed++;
+      } finally { inflight.delete(idx); }
+      if (++sinceSave >= 10) { sinceSave = 0; await persist(); }
+    }
+  };
+  await persist();
+  await Promise.all(Array.from({ length: 5 }, worker));
+
+  if (ctl.reason === 'auth' || ctl.reason === 'norelay') return persist({ error: 'Code du relais refusé : refais la configuration du relais (⚙︎).' });
+  if (ctl.reason === 'quota') return persist({ error: 'Plus assez de place sur l’appareil.' });
+  if (ctl.reason === 'net') { note(log, 'warn', 'Connexion perdue : reprise automatique.'); return persist({ waiting: true }); }
+  if (ctl.reason === 'budget') {
+    note(log, 'warn', `Limite de place atteinte : ${nf(imgq.length - done - failed)} images non téléchargées.`);
+    return persist({ phase: 'done', budgetHit: true });
+  }
+  if (ctl.stop) return persist({ paused: ctl.reason === 'pause' });
+  note(log, 'info', `${nf(done)} images enregistrées.`);
+  return persist({ phase: 'done' });
+}
+
+async function finishReplace(newId, oldId) {
+  const old = await DB.get('sites', oldId);
+  if (!old) return;
+  await stopRun(oldId, 'delete');
+  let last = null;
+  if (old.last != null) { // on retrouve la page où tu en étais, par son adresse
+    const oldToc = (await DB.get('meta', [oldId, 'toc'])) || [];
+    const newToc = (await DB.get('meta', [newId, 'toc'])) || [];
+    const key = oldToc[old.last]?.[2];
+    const j = key ? newToc.findIndex((t) => t[2] === key) : -1;
+    if (j >= 0) last = j;
+  }
+  await DB.patch(newId, { replaces: null, last, lastPos: null, readAt: old.readAt || null });
+  await DB.dropSite(oldId);
+}
+
+async function startSite(url, opts, replaces = null) {
+  let u = String(url || '').trim();
+  if (!u) return toast('Colle une adresse.', true);
+  const schemeGuessed = !/^https?:\/\//i.test(u);
+  if (schemeGuessed) u = 'https://' + u;
+  let x; try { x = new URL(u); } catch { return toast('Adresse invalide.', true); }
+  if (!/^https?:$/.test(x.protocol) || !x.hostname.includes('.')) return toast('Adresse invalide.', true);
+  if (!getRelay()) { pendingAdd = true; openRelay(); return toast('Configure d’abord le relais (une seule fois).'); }
+  if (!navigator.onLine) return toast('Il faut du réseau pour télécharger.', true);
+  const start = cleanUrl(x.href).href;
+  if (!replaces) {
+    const dup = (await DB.all('sites')).find((s) => pageKey(s.url) === pageKey(start) && !s.replaces);
+    if (dup) {
+      if (!confirm(`« ${dup.title || dup.root} » est déjà enregistré. Le remplacer par une nouvelle version ?`)) return;
+      replaces = dup.id;
+    }
+  }
+  const id = 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  await DB.put('sites', {
+    id, url: start, root: bare(x.hostname), prefix: opts.samePath ? x.pathname.replace(/[^/]*$/, '') : '', title: '', at: Date.now(),
+    opts: { mode: opts.mode, maxPages: opts.maxPages, maxDepth: 5000, budgetMB: opts.budgetMB }, schemeGuessed,
+    phase: 'pages', count: 0, textBytes: 0, imgTotal: 0, imgDone: 0, imgFailed: 0, imgBytes: 0, imgNext: 0, errors: 0,
+    log: [], replaces, last: null, readAt: null, paused: false, waiting: false, error: null,
+  });
+  try { await navigator.storage?.persist?.(); } catch {}
+  closeSheet();
+  if (location.hash && location.hash !== '#/') location.hash = '#/'; else renderLib();
+  runSite(id);
+}
+
+/* ═════════════ Interface ═════════════ */
+let bumpT = 0;
+function bump() {
+  if (bumpT) return;
+  bumpT = setTimeout(() => {
+    bumpT = 0;
+    if (!$('#vLib').hidden) renderLib();
+    if (!$('#vSite').hidden && cur.site) refreshSiteProgress();
+  }, 350);
+}
+function net() { const on = navigator.onLine; const n = $('#net'); n.textContent = on ? 'En ligne' : 'Hors ligne'; n.classList.toggle('off', !on); }
+addEventListener('online', () => { net(); resumeAll(); });
+addEventListener('offline', net);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (RUN.size) wake(true); resumeAll(); } });
+net();
+
+let openSheetEl = null;
+function sheet(id) { closeSheet(); openSheetEl = $(id); openSheetEl.classList.add('on'); $('#sheetBg').classList.add('on'); }
+function closeSheet() { if (openSheetEl) openSheetEl.classList.remove('on'); openSheetEl = null; $('#sheetBg').classList.remove('on'); }
+$('#sheetBg').onclick = closeSheet;
+document.addEventListener('click', (e) => {
+  if (e.target.closest('[data-close]')) closeSheet();
+  const g = e.target.closest('[data-go]'); if (g) location.hash = g.dataset.go;
+  if (e.target.closest('[data-open-relay]')) openRelay();
 });
+
+/* ── Bibliothèque ── */
+function siteState(s) {
+  const running = RUN.has(s.id);
+  const total = (s.textBytes || 0) + (s.imgBytes || 0);
+  if (s.error) return { cls: 'err', text: s.error, acts: [['retry', 'Réessayer', 1], ['delete', 'Supprimer']] };
+  if (s.phase === 'done') {
+    const pct = s.last != null && s.count ? Math.round((((s.lastPos ?? s.last) + 1) / s.count) * 100) : null;
+    return { text: `${nf(s.count)} pages${s.imgDone ? ' · ' + nf(s.imgDone) + ' images' : ''} · ${fmtB(total)}${s.budgetHit ? ' · limite de place atteinte' : ''}${pct ? ` · lu à ${pct} %` : ''}`, pct, acts: [] };
+  }
+  const where = s.phase === 'pages'
+    ? `Pages : ${nf(s.count)} / ${nf(s.opts.maxPages)} · ${fmtB(s.textBytes)}`
+    : `Images : ${nf((s.imgDone || 0) + (s.imgFailed || 0))} / ${nf(s.imgTotal)} · ${fmtB(total)}${s.imgDone > 10 ? ` (≈ ${fmtB(s.textBytes + (s.imgBytes / s.imgDone) * (s.imgTotal - (s.imgFailed || 0)))} au total)` : ''}`;
+  const pct = s.phase === 'pages' ? s.count / Math.max(1, s.opts.maxPages) : ((s.imgDone || 0) + (s.imgFailed || 0)) / Math.max(1, s.imgTotal);
+  if (running) return { cls: 'live', text: (s.replaces ? 'Mise à jour · ' : '') + where, pct: Math.round(pct * 100), acts: [['pause', 'Pause']] };
+  if (s.paused) return { text: 'En pause · ' + where, pct: Math.round(pct * 100), acts: [['resume', 'Reprendre', 1]] };
+  if (!getRelay()) return { text: 'Relais non configuré · ' + where, pct: Math.round(pct * 100), acts: [['relay', 'Configurer le relais', 1]] };
+  if (!navigator.onLine || s.waiting) return { text: 'En attente du réseau · ' + where, pct: Math.round(pct * 100), acts: [['resume', 'Reprendre maintenant']] };
+  return { text: where, pct: Math.round(pct * 100), acts: [['resume', 'Reprendre', 1]] };
+}
+async function renderLib() {
+  const list = (await DB.all('sites')).sort((a, b) => (b.readAt || b.at) - (a.readAt || a.at));
+  $('#bnRelay').hidden = !!getRelay();
+  $('#bnInstall').hidden = isStandalone() || ls.get('hideInstall', false);
+  const box = $('#sites');
+  if (!list.length) {
+    box.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v13M7.5 10.5h9M4 14c1 4 4.2 6 8 6s7-2 8-6"/></svg><h2>Rien à lire pour l’instant</h2><p>Ajoute un site en Wi-Fi : il sera ensuite lisible partout, même sans réseau.</p></div>`;
+    $('#storage').hidden = true;
+    return;
+  }
+  box.querySelector('.empty')?.remove();
+  const ids = new Set(list.map((s) => s.id));
+  for (const el of [...box.children]) if (!ids.has(el.dataset.id)) el.remove();
+  list.forEach((s, i) => {
+    let el = box.querySelector(`.card[data-id="${s.id}"]`);
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'card'; el.dataset.id = s.id;
+      el.innerHTML = `<div class="main" data-act="open"><div class="mark"></div><div class="txt"><h3></h3><div class="meta"></div></div><span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></div><div class="status"></div><div class="prog"><i></i></div><div class="acts"></div>`;
+    }
+    if (box.children[i] !== el) box.insertBefore(el, box.children[i] || null);
+    const st = siteState(s);
+    el.style.setProperty('--h', `hsl(${hue(s.root)} 36% 40%)`);
+    $('.mark', el).textContent = (s.title || s.root).trim().charAt(0).toUpperCase();
+    $('h3', el).textContent = s.title || s.root;
+    $('.meta', el).textContent = s.url.replace(/^https?:\/\/(www\.)?/, '');
+    const stEl = $('.status', el); stEl.textContent = st.text; stEl.className = 'status' + (st.cls ? ' ' + st.cls : '');
+    $('.prog', el).hidden = st.pct == null;
+    $('.prog i', el).style.width = (st.pct || 0) + '%';
+    const sig = JSON.stringify(st.acts);
+    if (el.dataset.acts !== sig) {
+      el.dataset.acts = sig;
+      $('.acts', el).innerHTML = st.acts.map(([a, l, p]) => `<button class="btn mini${p ? ' primary' : ''}${a === 'delete' ? ' danger' : ''}" data-act="${a}">${l}</button>`).join('');
+    }
+  });
+  const total = list.reduce((a, s) => a + (s.textBytes || 0) + (s.imgBytes || 0), 0);
+  let quota = 0; try { quota = (await navigator.storage.estimate()).quota || 0; } catch {}
+  $('#storage').hidden = false;
+  $('#stTxt').textContent = `${list.length} site${list.length > 1 ? 's' : ''} · ${fmtB(total)}${quota ? ' sur ' + fmtB(quota) + ' dispo' : ''}`;
+  $('#stBar').style.width = quota ? Math.max(1, Math.min(100, (total / quota) * 100)) + '%' : '2%';
+}
+$('#sites').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const id = b.closest('.card').dataset.id;
+  const s = await DB.get('sites', id); if (!s) return;
+  const a = b.dataset.act;
+  if (a === 'open') { if (s.count) location.hash = '#/s/' + id; else toast('Pas encore de page enregistrée.'); }
+  if (a === 'pause') { b.disabled = true; await stopRun(id, 'pause'); }
+  if (a === 'resume') { if (!navigator.onLine) return toast('Pas de réseau pour l’instant.', true); await DB.patch(id, { paused: false, waiting: false, error: null }); runSite(id); }
+  if (a === 'retry') {
+    await DB.patch(id, { error: null, paused: false, waiting: false });
+    if (!s.count) { await DB.del('meta', [id, 'crawl']); await DB.patch(id, { log: [], errors: 0, phase: 'pages' }); }
+    runSite(id);
+  }
+  if (a === 'relay') openRelay();
+  if (a === 'delete') { if (confirm(`Supprimer « ${s.title || s.root} » ?`)) { await stopRun(id, 'delete'); await DB.dropSite(id); renderLib(); } }
+  bump();
+});
+$('#hideInstall').onclick = () => { ls.set('hideInstall', true); $('#bnInstall').hidden = true; };
+
+/* ── Ajouter ── */
+const addOpts = Object.assign({ mode: 'light', maxPages: 500, budgetMB: 300, samePath: false }, ls.get('addOpts', {}));
+let pendingAdd = false;
+function openAdd() {
+  if (!getRelay()) { pendingAdd = true; openRelay(); return; }
+  $(`input[name=mode][value=${addOpts.mode}]`).checked = true;
+  $('#aMax').value = addOpts.maxPages; $('#aMaxO').textContent = nf(addOpts.maxPages);
+  $$('#aBudget .chip').forEach((c) => c.classList.toggle('on', +c.dataset.mb === addOpts.budgetMB));
+  $('#aSame').checked = addOpts.samePath;
+  sheet('#shAdd');
+  setTimeout(() => $('#aUrl').focus(), 280);
+}
+$('#bAdd').onclick = openAdd;
+$('#aMax').oninput = () => { $('#aMaxO').textContent = nf($('#aMax').value); };
+$('#aBudget').onclick = (e) => { const c = e.target.closest('.chip'); if (!c) return; addOpts.budgetMB = +c.dataset.mb; $$('#aBudget .chip').forEach((x) => x.classList.toggle('on', x === c)); };
+$('#aGo').onclick = () => {
+  Object.assign(addOpts, { mode: $('input[name=mode]:checked').value, maxPages: +$('#aMax').value, samePath: $('#aSame').checked });
+  ls.set('addOpts', addOpts);
+  startSite($('#aUrl').value, addOpts).then(() => { if (!openSheetEl) $('#aUrl').value = ''; });
+};
 $('#aUrl').onkeydown = (e) => { if (e.key === 'Enter') $('#aGo').click(); };
 
-async function startJob(url, opts) {
-  if (!url) return toast('Colle une adresse.', true);
-  if (!navigator.onLine) return toast('Il faut du réseau pour télécharger.', true);
-  Object.assign(savedOpts, opts); ls.set('addOpts', savedOpts);
-  $('#aGo').disabled = true;
+/* ── Relais ── */
+function openRelay() {
+  $('#rUrl').value = getRelay();
+  $('#rKey').value = ls.get('relayCode', '');
+  $('#rCode').value = relaySource() || 'Chargement… rouvre ce panneau dans un instant.';
+  const st = $('#rSt'); st.textContent = getRelay() ? 'Relais enregistré. Tu peux le retester.' : ''; st.className = 'st';
+  $('#rTip').hidden = isStandalone() || !!getRelay();
+  sheet('#shRelay');
+}
+$('#bSettings').onclick = openRelay;
+$('#rCopy').onclick = () => {
+  const src = relaySource();
+  if (!src) return toast('Code pas encore chargé, réessaie dans une seconde.', true);
+  const done = () => toast('Code du relais copié');
+  const fallbackCopy = () => { const t = $('#rCode'); t.value = src; t.closest('details').open = true; t.focus(); t.select(); try { document.execCommand('copy'); done(); } catch { toast('Sélectionne le texte puis copie-le.', true); } };
+  if (navigator.clipboard?.writeText) navigator.clipboard.writeText(src).then(done, fallbackCopy); else fallbackCopy();
+};
+$('#rKey').onchange = () => { const v = $('#rKey').value.trim(); if (v.length >= 8) { ls.set('relayCode', v); $('#rCode').value = relaySource(); } };
+$('#rTest').onclick = async () => {
+  const st = $('#rSt');
+  let u = $('#rUrl').value.trim();
+  if (!u) { st.textContent = 'Colle l’adresse du Worker.'; st.className = 'st err'; return; }
+  if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+  u = u.replace(/\/+$/, '');
+  st.textContent = 'Test en cours…'; st.className = 'st';
   try {
-    const j = await api('/api/jobs', { method: 'POST', body: { url, ...opts } });
-    setJobs([...jobsList(), { id: j.id, url: j.url, mode: j.mode, replace: opts.replace || null }]);
-    jobState[j.id] = j;
-    closeSheet(); $('#aUrl').value = '';
-    try { await navigator.storage?.persist?.(); } catch {}
-    if (location.hash && location.hash !== '#/') location.hash = '#/';
-    renderJobs(); pollJobs();
+    const r = await fetch(u + '/?ping=1&k=' + encodeURIComponent(ls.get('relayCode', '')), { cache: 'no-store' });
+    const j = await r.json().catch(() => null);
+    if (!j || j.app !== 'ancre-relais') throw fail('notrelay', 'Ce Worker ne contient pas encore le code d’Ancre : « Edit code », colle le code, puis « Deploy ».');
+    if (!j.ok) throw fail('code', 'Le relais répond, mais avec un autre code privé. Soit tu recopies le code (étape 1) et le redéploies, soit tu colles dans « Code privé » (en bas) celui écrit dans ton Worker, à la ligne const CODE.');
+    ls.set('relay', u);
+    st.textContent = '✓ Relais connecté. Tu peux ajouter des sites.'; st.className = 'st ok';
+    renderLib(); resumeAll();
+    if (pendingAdd) { pendingAdd = false; setTimeout(openAdd, 700); }
   } catch (e) {
-    if (e.status === 401) { toast('Code d’accès requis : renseigne-le dans les réglages.', true); }
-    else toast(e.message, true);
-  } finally { $('#aGo').disabled = false; }
-}
-
-function renderJobs() {
-  const box = $('#jobs');
-  const list = jobsList();
-  box.innerHTML = list.map((jj) => {
-    const j = jobState[jj.id] || { status: 'running', pages: 0, maxPages: 0, url: jj.url };
-    const host = (() => { try { return new URL(j.url).hostname.replace(/^www\./, ''); } catch { return j.url; } })();
-    const importing = j.status === 'importing';
-    const failed = j.status === 'failed' || j.status === 'lost';
-    const pct = j.maxPages ? Math.min(100, j.pages / j.maxPages * 100) : 0;
-    const label = importing ? `Enregistrement sur l’appareil… ${j.importPct || 0} %` : failed ? 'Échec' : j.status === 'running' ? `${nf.format(j.pages)} pages récupérées` : 'Prêt';
-    return `<div class="card job" data-j="${esc(jj.id)}" style="--h:hsl(${hue(host)} 36% 40%)">
-      <div class="main"><div class="mark">${esc(host.charAt(0).toUpperCase())}</div>
-      <div class="txt"><h3>${esc(j.title && j.title !== host ? j.title : host)}</h3><div class="meta">${esc(label)}${j.status === 'running' && j.estimate ? ' · ≈ ' + fmtB(j.estimate) : ''}</div></div>
-      <button class="ib" data-cancel aria-label="${failed ? 'Retirer' : 'Arrêter'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-      ${failed ? `<div class="err">${esc(j.error || (j.log || []).filter((l) => l.level === 'error').slice(-1)[0]?.msg || 'Le téléchargement a échoué.')}</div>`
-        : `<div class="prog${j.status === 'running' && !j.queued && j.pages ? ' ind' : ''}"><i style="width:${importing ? (j.importPct || 0) : pct}%"></i></div>
-           <div class="cur">${esc(importing ? 'Ne ferme pas l’appli quelques secondes…' : (j.current || 'Démarrage…'))}</div>`}
-    </div>`;
-  }).join('');
-}
-$('#jobs').onclick = async (e) => {
-  if (!e.target.closest('[data-cancel]')) return;
-  const id = e.target.closest('[data-j]').dataset.j;
-  const st = jobState[id];
-  if (st && st.status === 'running') { try { await api(`/api/jobs/${id}/cancel`, { method: 'POST' }); toast('Arrêt demandé : les pages récupérées seront gardées.'); } catch (err) { toast(err.message, true); } return; }
-  setJobs(jobsList().filter((j) => j.id !== id)); delete jobState[id]; renderJobs(); renderLib();
-  api(`/api/jobs/${id}`, { method: 'DELETE' }).catch(() => {});
+    st.textContent = e.code ? e.message : 'Adresse injoignable : vérifie qu’elle commence par https:// et finit par workers.dev.';
+    st.className = 'st err';
+  }
 };
 
-let polling = false;
-async function pollJobs() {
-  if (polling || !navigator.onLine) return;
-  polling = true;
-  try {
-    for (const jj of jobsList()) {
-      const cur = jobState[jj.id];
-      if (cur && ['importing', 'failed', 'lost'].includes(cur.status)) continue;
-      try {
-        const j = await api('/api/jobs/' + jj.id);
-        jobState[jj.id] = j;
-        if (j.status === 'done' || (j.status === 'cancelled' && j.pages)) importJob(jj, j);
-      } catch (e) {
-        if (e.status === 404) jobState[jj.id] = { ...(cur || {}), url: jj.url, status: 'lost', error: 'Téléchargement expiré sur le serveur (redémarré ou trop ancien). Relance-le.' };
-      }
-    }
-  } finally { polling = false; renderJobs(); }
-}
-setInterval(() => { if (jobsList().length && document.visibilityState === 'visible') pollJobs(); }, 1500);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') pollJobs(); });
-
-async function importJob(jj, j) {
-  jobState[jj.id] = { ...j, status: 'importing', importPct: 0 };
-  renderJobs();
-  try {
-    const pack = await api(`/api/jobs/${jj.id}/pack`);
-    let imgBuf = null;
-    if (pack.imgs?.some(Boolean)) imgBuf = await (await api(`/api/jobs/${jj.id}/images`, { raw: true })).arrayBuffer();
-    const s = pack.site;
-    const id = jj.replace || ('s' + hue(s.url).toString(36) + Date.now().toString(36));
-    if (jj.replace) await DB.dropSite(jj.replace);
-    let bytes = 0;
-    const toc = [];
-    const batch = [];
-    for (let i = 0; i < pack.pages.length; i++) {
-      const p = pack.pages[i];
-      const rec = CAN_GZ ? { z: await gz(p.h) } : { h: p.h };
-      bytes += rec.z ? rec.z.size : p.h.length * 2;
-      toc.push([p.t, p.u]);
-      batch.push([[id, i], rec]);
-      if (batch.length >= 100) { await DB.putMany('pages', batch.splice(0)); jobState[jj.id].importPct = Math.round(i / pack.pages.length * 90); renderJobs(); }
-    }
-    if (batch.length) await DB.putMany('pages', batch);
-    if (imgBuf) {
-      const imgs = [];
-      pack.imgs.forEach((r, n) => { if (r) { const b = new Blob([imgBuf.slice(r[0], r[0] + r[1])], { type: 'image/webp' }); bytes += b.size; imgs.push([[id, n], b]); } });
-      for (let k = 0; k < imgs.length; k += 200) await DB.putMany('imgs', imgs.slice(k, k + 200));
-    }
-    const old = jj.replace ? sites.find((x) => x.id === jj.replace) : null;
-    bytes += JSON.stringify(toc).length;
-    await DB.put('sites', { id, url: s.url, root: s.root, title: s.title, mode: s.mode, count: pack.pages.length, toc, bytes, at: Date.now(), last: old?.last ?? null, readAt: old?.readAt });
-    setJobs(jobsList().filter((x) => x.id !== jj.id)); delete jobState[jj.id];
-    api(`/api/jobs/${jj.id}`, { method: 'DELETE' }).catch(() => {});
-    toast(`« ${s.title} » est disponible hors ligne (${fmtB(bytes)})`);
-  } catch (e) {
-    jobState[jj.id] = { ...j, status: 'failed', error: /quota|plein|QuotaExceeded/i.test(e.message + e.name) ? 'Plus assez d’espace sur l’appareil.' : e.message };
-  }
-  renderJobs(); renderLib();
-}
-
-/* ───── Sommaire ───── */
-let cur = { site: null, filterHits: null, shown: 200 };
-async function showSite(id) {
+/* ── Sommaire ── */
+const cur = { site: null, toc: [], index: new Map(), alias: {}, order: [], pos: new Map(), shown: 200, hits: null };
+async function loadSite(id) {
   const s = await DB.get('sites', id);
+  if (!s) return null;
+  cur.site = s;
+  cur.toc = (await DB.get('meta', [id, 'toc'])) || [];
+  cur.alias = (await DB.get('meta', [id, 'alias'])) || {};
+  cur.index = new Map(cur.toc.map((t, i) => [t[2], i]));
+  cur.order = cur.toc.map((t, i) => i).sort((a, b) => (cur.toc[a][3] ?? a) - (cur.toc[b][3] ?? b));
+  cur.pos = new Map(cur.order.map((i, p) => [i, p]));
+  return s;
+}
+async function showSite(id) {
+  const s = await loadSite(id);
   if (!s) { location.hash = '#/'; return; }
-  cur.site = s; cur.shown = 200; cur.filterHits = null;
-  $('#sTop').textContent = s.root; $('#sTitle').textContent = s.title;
-  $('#sMeta').textContent = `${nf.format(s.count)} pages · ${fmtB(s.bytes)} · ${s.url.replace(/^https?:\/\//, '')}`;
-  $('#bResume').textContent = s.last != null ? `Reprendre · page ${s.last + 1}` : 'Commencer la lecture';
+  cur.shown = 200; cur.hits = null;
+  $('#sTop').textContent = s.root;
+  $('#sTitle').textContent = s.title || s.root;
   $('#sFilter').value = '';
+  refreshSiteProgress(true);
   renderToc();
+}
+async function refreshSiteProgress(force) {
+  const s = await DB.get('sites', cur.site.id);
+  if (!s) return;
+  const grew = s.count !== cur.toc.length;
+  cur.site = s;
+  $('#sMeta').textContent = `${nf(s.count)} pages${s.imgDone ? ' · ' + nf(s.imgDone) + ' images' : ''} · ${fmtB((s.textBytes || 0) + (s.imgBytes || 0))} · ${s.url.replace(/^https?:\/\//, '')}`;
+  $('#bResume').textContent = s.last != null ? `Reprendre · page ${(cur.pos.get(s.last) ?? s.last) + 1}` : 'Commencer la lecture';
+  $('#bResume').disabled = !s.count;
+  const p = $('#sProg');
+  if (s.phase !== 'done' || s.error) { const st = siteState(s); p.hidden = false; p.textContent = 'Téléchargement : ' + st.text; } else p.hidden = true;
+  if (grew && !force) { await loadSite(s.id); if (!$('#sFilter').value.trim()) renderToc(); }
 }
 function renderToc() {
   const s = cur.site, q = $('#sFilter').value.trim().toLowerCase();
-  let items = s.toc.map((t, i) => ({ i, t: t[0], u: t[1] }));
-  if (q) items = cur.filterHits ?? items.filter((x) => (x.t + ' ' + x.u).toLowerCase().includes(q));
-  const hl = (str) => q ? esc(str).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>') : esc(str);
-  $('#toc').innerHTML = items.slice(0, cur.shown).map((x) => `<a href="#/s/${s.id}/p/${x.i}" class="${x.i === s.last ? 'cur' : ''}"><span class="n">${x.i + 1}</span><span class="tt"><b>${hl(x.t)}</b><span>${esc(x.u.replace(/^https?:\/\/(www\.)?[^/]+/, '') || '/')}</span>${x.snip ? `<span class="snip">${hl(x.snip)}</span>` : ''}</span></a>`).join('')
-    || `<p style="color:var(--mute);padding:18px 4px">Aucun résultat.</p>`;
+  let items = cur.order.map((i) => ({ i, t: cur.toc[i][0], u: cur.toc[i][1] }));
+  if (q) items = cur.hits ?? items.filter((x) => (x.t + ' ' + x.u).toLowerCase().includes(q));
+  const re = q ? new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi') : null;
+  const hl = (str) => (re ? esc(str).replace(re, '<mark>$1</mark>') : esc(str));
+  $('#toc').innerHTML = items.slice(0, cur.shown).map((x) => `<a href="#/s/${s.id}/p/${x.i}" class="${x.i === s.last ? 'cur' : ''}"><span class="n">${(cur.pos.get(x.i) ?? x.i) + 1}</span><span class="tt"><b>${hl(x.t)}</b><span>${esc(x.u.replace(/^https?:\/\/(www\.)?[^/]+/, '') || '/')}</span>${x.snip ? `<span class="snip">${hl(x.snip)}</span>` : ''}</span></a>`).join('')
+    || `<p style="color:var(--mute);padding:18px 4px">${q ? 'Aucun résultat.' : 'Pas encore de page.'}</p>`;
   $('#bMore').hidden = items.length <= cur.shown;
 }
 $('#bMore').onclick = () => { cur.shown += 300; renderToc(); };
-$('#bResume').onclick = () => { location.hash = `#/s/${cur.site.id}/p/${cur.site.last ?? 0}`; };
-
+$('#bResume').onclick = () => { location.hash = `#/s/${cur.site.id}/p/${cur.site.last ?? cur.order[0] ?? 0}`; };
 let searchT, searchSeq = 0;
 $('#sFilter').oninput = () => {
-  cur.filterHits = null; renderToc();
+  cur.hits = null; renderToc();
   clearTimeout(searchT);
   const q = $('#sFilter').value.trim().toLowerCase();
   if (q.length < 3) return;
   searchT = setTimeout(async () => {
     const seq = ++searchSeq, s = cur.site;
-    const recs = await DB.pagesOf(s.id);
-    const hits = [];
     const norm = (t) => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-    const nq = norm(q);
-    for (let i = 0; i < recs.length; i++) {
-      const text = (await pageHtml(recs[i])).replace(/<[^>]+>/g, ' ').replace(/&\w+;/g, ' ').replace(/\s+/g, ' ');
-      const t = s.toc[i]?.[0] || '';
-      const pos = norm(text).indexOf(nq);
-      if (pos >= 0 || norm(t).includes(nq)) hits.push({ i, t, u: s.toc[i]?.[1] || '', snip: pos >= 0 ? '…' + text.slice(Math.max(0, pos - 60), pos + q.length + 90) + '…' : '' });
+    const nq = norm(q), recs = await DB.pagesMap(s.id), hits = [];
+    for (const i of cur.order) {
+      const text = ((await pageHtml(recs.get(i))) || '').replace(/<[^>]+>/g, ' ').replace(/&[#\w]+;/g, ' ').replace(/\s+/g, ' ');
       if (seq !== searchSeq) return;
+      const [t, u] = cur.toc[i];
+      const pos = norm(text).indexOf(nq);
+      if (pos >= 0 || norm(t).includes(nq)) hits.push({ i, t, u, snip: pos >= 0 ? '…' + text.slice(Math.max(0, pos - 60), pos + q.length + 90) + '…' : '' });
     }
-    cur.filterHits = hits; renderToc();
+    cur.hits = hits; renderToc();
   }, 350);
 };
-
 $('#bSiteMenu').onclick = () => {
   const s = cur.site;
-  $('#ssTitle').textContent = s.title; $('#ssSub').textContent = `${nf.format(s.count)} pages · ${fmtB(s.bytes)} · enregistré le ${new Date(s.at).toLocaleDateString('fr-FR')}`;
-  $('#ssOpen').href = s.url; sheet('#shSite');
+  $('#ssTitle').textContent = s.title || s.root;
+  $('#ssSub').textContent = `${nf(s.count)} pages · ${fmtB((s.textBytes || 0) + (s.imgBytes || 0))} · enregistré le ${new Date(s.at).toLocaleDateString('fr-FR')}`;
+  $('#ssOpen').href = s.url;
+  sheet('#shSite');
 };
-$('#ssUpdate').onclick = () => { const s = cur.site; closeSheet(); startJob(s.url, { mode: s.mode, maxPages: Math.max(s.count, savedOpts.maxPages), replace: s.id }); };
+$('#ssUpdate').onclick = () => { const s = cur.site; startSite(s.url, { ...s.opts, samePath: !!s.prefix }, s.id); };
 $('#ssDelete').onclick = async () => {
   const s = cur.site;
-  if (!confirm(`Supprimer « ${s.title} » de l’appareil ?`)) return;
-  await DB.dropSite(s.id); closeSheet(); toast('Site supprimé'); location.hash = '#/';
+  if (!confirm(`Supprimer « ${s.title || s.root} » de l’appareil ?`)) return;
+  await stopRun(s.id, 'delete'); await DB.dropSite(s.id);
+  closeSheet(); toast('Site supprimé'); location.hash = '#/';
 };
 
-/* ───── Lecteur ───── */
+/* ── Lecteur ── */
 const prefs = Object.assign({ fs: 19, th: '', ff: 'serif', lh: 1.62 }, ls.get('prefs', {}));
 function applyPrefs() {
   const r = $('#vRead');
@@ -604,8 +1250,7 @@ function applyPrefs() {
   $$('#themes .chip').forEach((b) => b.classList.toggle('on', b.dataset.th === prefs.th));
   $$('#fonts .chip').forEach((b) => b.classList.toggle('on', b.dataset.ff === prefs.ff));
   $$('#lhs .chip').forEach((b) => b.classList.toggle('on', +b.dataset.lh === prefs.lh));
-  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-  $$('meta[name=theme-color]').forEach((m) => m.content = bg);
+  $('meta[name=theme-color]').content = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
   ls.set('prefs', prefs);
 }
 $('#shType').onclick = (e) => {
@@ -619,37 +1264,66 @@ $('#shType').onclick = (e) => {
 $('#bType').onclick = () => sheet('#shType');
 applyPrefs();
 
-let urls = [];
+let objUrls = [], io = null;
+function linkTarget(href) {
+  let u; try { u = new URL(href); } catch { return { type: 'ext' }; }
+  if (!/^https?:$/.test(u.protocol)) return { type: 'ext' };
+  const frag = u.hash.slice(1); u.hash = '';
+  let k = ''; try { k = pageKey(u.href); } catch {}
+  const i = cur.index.has(k) ? cur.index.get(k) : cur.alias[k];
+  if (i !== undefined) return { type: 'page', i, frag };
+  if (inScope(cur.site, u.href)) return { type: 'miss', url: u.href };
+  return { type: 'ext' };
+}
 async function showPage(id, i, anchor) {
-  if (!cur.site || cur.site.id !== id) cur.site = await DB.get('sites', id);
-  const s = cur.site;
-  if (!s) { location.hash = '#/'; return; }
-  i = Math.max(0, Math.min(s.count - 1, i));
-  const rec = await DB.get('pages', [id, i]);
-  urls.forEach(URL.revokeObjectURL); urls = [];
-  const art = $('#art');
-  art.innerHTML = rec ? await pageHtml(rec) : '<p>Page illisible.</p>';
-  const [title, url] = s.toc[i] || ['', ''];
-  if (!art.querySelector('h1') && title) art.insertAdjacentHTML('afterbegin', `<h1>${esc(title)}</h1>`);
-  $('#rSite').textContent = s.title; $('#rPos').textContent = `${i + 1} / ${s.count}`;
-  $('#rSrc').textContent = url.replace(/^https?:\/\//, '');
-  art.querySelectorAll('a').forEach((a) => {
-    if (a.dataset.p != null) { const [n, f] = a.dataset.p.split('#'); a.href = `#/s/${id}/p/${n}${f ? '/' + encodeURIComponent(f) : ''}`; }
-    else if (a.dataset.x) { a.href = '#'; a.classList.add('x'); }
-    else if (a.getAttribute('href')) { a.target = '_blank'; a.rel = 'noopener'; }
-  });
-  for (const img of art.querySelectorAll('img[data-i]')) {
-    DB.get('imgs', [id, +img.dataset.i]).then((b) => { if (b) { const u = URL.createObjectURL(b); urls.push(u); img.src = u; } else img.remove(); });
+  if (!cur.site || cur.site.id !== id) { if (!(await loadSite(id))) { location.hash = '#/'; return; } }
+  else {
+    const fresh = await DB.get('sites', id);
+    if (fresh && fresh.count !== cur.toc.length) await loadSite(id); else if (fresh) cur.site = fresh;
   }
+  const s = cur.site;
+  if (!cur.toc.length) { location.hash = '#/s/' + id; return; }
+  if (i < 0 || i >= cur.toc.length) i = cur.order[0] ?? 0;
+  const pos = cur.pos.get(i) ?? 0, prevI = cur.order[pos - 1], nextI = cur.order[pos + 1];
+  objUrls.forEach(URL.revokeObjectURL); objUrls = [];
+  if (io) io.disconnect();
+  const art = $('#art');
+  const html = await pageHtml(await DB.get('pages', [id, i]));
+  art.innerHTML = html || '<p>Page illisible.</p>';
+  const [title, url] = cur.toc[i];
+  if (!art.querySelector('h1') && title) art.insertAdjacentHTML('afterbegin', `<h1>${esc(title)}</h1>`);
+  $('#rSite').textContent = s.title || s.root;
+  $('#rPos').textContent = `${pos + 1} / ${cur.toc.length}`;
+  $('#rSrc').textContent = url.replace(/^https?:\/\//, '');
+  for (const a of art.querySelectorAll('a[href]')) {
+    const t = linkTarget(a.getAttribute('href'));
+    if (t.type === 'page') a.setAttribute('href', `#/s/${id}/p/${t.i}${t.frag ? '/' + encodeURIComponent(t.frag) : ''}`);
+    else if (t.type === 'miss') { a.dataset.x = a.getAttribute('href'); a.setAttribute('href', '#'); a.classList.add('x'); }
+    else { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+  }
+  const pending = s.phase !== 'done' && !s.error;
+  io = new IntersectionObserver((entries) => {
+    for (const en of entries) {
+      if (!en.isIntersecting) continue;
+      const img = en.target; io.unobserve(img);
+      DB.get('imgs', [id, img.dataset.u]).then((b) => {
+        if (b) { const o = URL.createObjectURL(b); objUrls.push(o); img.src = o; }
+        else if (pending || cur.site.budgetHit) { const sp = document.createElement('span'); sp.className = 'noimg'; sp.textContent = pending ? 'Image en cours de téléchargement' : 'Image non téléchargée (limite de place atteinte)'; img.replaceWith(sp); }
+        else img.remove(); // icônes et images illisibles ignorées volontairement
+      });
+    }
+  }, { rootMargin: '1500px 0px' });
+  art.querySelectorAll('img[data-u]').forEach((im) => io.observe(im));
   const prev = $('#bPrev'), next = $('#bNext');
-  prev.disabled = i === 0; next.disabled = i >= s.count - 1;
-  $('b', prev).textContent = s.toc[i - 1]?.[0] || ''; $('b', next).textContent = s.toc[i + 1]?.[0] || '';
-  prev.onclick = () => location.hash = `#/s/${id}/p/${i - 1}`;
-  next.onclick = () => location.hash = `#/s/${id}/p/${i + 1}`;
-  const target = anchor && document.getElementById(anchor);
+  prev.disabled = prevI === undefined; next.disabled = nextI === undefined;
+  $('b', prev).textContent = cur.toc[prevI]?.[0] || '';
+  $('b', next).textContent = cur.toc[nextI]?.[0] || '';
+  prev.onclick = () => { location.hash = `#/s/${id}/p/${prevI}`; };
+  next.onclick = () => { location.hash = `#/s/${id}/p/${nextI}`; };
+  const target = anchor && (document.getElementById(anchor) || document.getElementsByName(anchor)[0]);
   if (target) target.scrollIntoView(); else scrollTo(0, 0);
-  s.last = i; s.readAt = Date.now();
-  DB.put('sites', s).catch(() => {});
+  s.last = i;
+  DB.patch(id, { last: i, lastPos: pos, readAt: Date.now() }).catch(() => {});
 }
 $('#art').addEventListener('click', (e) => {
   const a = e.target.closest('a.x'); if (!a) return;
@@ -658,19 +1332,9 @@ $('#art').addEventListener('click', (e) => {
   $('#mOpen').hidden = !navigator.onLine;
   sheet('#shMiss');
 });
-$('#bBackSite').onclick = () => location.hash = '#/s/' + cur.site.id;
+$('#bBackSite').onclick = () => { location.hash = '#/s/' + cur.site.id; };
 
-/* ───── Réglages ───── */
-$('#bSettings').onclick = async () => {
-  $('#setCode').value = ls.get('code', '');
-  $('#setInfo').textContent = 'Vérification du serveur…';
-  sheet('#shSettings');
-  try { const h = await api('/api/health'); $('#setInfo').textContent = `Serveur Ancre ${h.version} connecté${h.images ? '' : ' (images indisponibles)'}${h.code ? ' · code d’accès requis' : ''}.`; }
-  catch (e) { $('#setInfo').textContent = navigator.onLine ? e.message : 'Hors ligne : la lecture fonctionne, le téléchargement attendra le réseau.'; }
-};
-$('#setSave').onclick = () => { ls.set('code', $('#setCode').value.trim()); closeSheet(); toast('Enregistré'); };
-
-/* ───── Navigation ───── */
+/* ── Navigation ── */
 async function route() {
   closeSheet();
   const h = location.hash.replace(/^#/, '') || '/';
@@ -678,12 +1342,11 @@ async function route() {
   for (const v of ['#vLib', '#vSite', '#vRead']) $(v).hidden = true;
   if ((m = /^\/s\/([^/]+)\/p\/(\d+)(?:\/(.+))?$/.exec(h))) { $('#vRead').hidden = false; await showPage(m[1], +m[2], m[3] && decodeURIComponent(m[3])); }
   else if ((m = /^\/s\/([^/]+)$/.exec(h))) { $('#vSite').hidden = false; await showSite(m[1]); scrollTo(0, 0); }
-  else { $('#vLib').hidden = false; await renderLib(); renderJobs(); }
+  else { $('#vLib').hidden = false; await renderLib(); }
 }
 addEventListener('hashchange', route);
-route(); pollJobs();
-
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+route().then(resumeAll);
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>

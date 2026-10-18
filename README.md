@@ -1,32 +1,50 @@
-# ⚓ Ancre 2
+# ⚓ Ancre
 
-Garde des sites entiers en **version lecture ultra-légère** sur ton iPad / téléphone, pour les lire sans réseau (transports, avion…).
-Texte seul : ≈ 2–5 Mo pour 1000 pages. Option « images légères » : ≈ 30–60 Mo.
+Garde des sites entiers (pages, sous-pages, images) en **version lecture** sur ton iPad ou ton téléphone, pour les lire **sans réseau** dans les transports.
+Pubs, menus, bandeaux cookies et scripts sont retirés. Les images sont réduites sur l'appareil.
 
-Le serveur aspire le site, retire pubs, menus et scripts, garde le contenu, compresse, et envoie un paquet à l'appareil. Il ne conserve rien après.
+| Format | Place utilisée |
+|---|---|
+| Texte seul | ≈ 3 Mo pour 1000 pages |
+| Texte + images légères (720 px) | ≈ 60 Ko par image |
+| Texte + images nettes (1200 px) | ≈ 180 Ko par image |
 
-## Mise en ligne gratuite (Render)
+Tu fixes aussi une place maximale par site (100 Mo, 300 Mo, 1 Go ou sans limite).
 
-GitHub Pages ne peut pas faire tourner le serveur : il faut un hébergeur Node. Render est gratuit :
+## Installation (une seule fois, ~10 min, gratuit)
 
-1. Pousse ce dossier dans ton repo GitHub.
-2. Sur https://render.com → **New → Blueprint** → choisis le repo (le fichier `render.yaml` configure tout).
-3. Renseigne `ACCESS_CODE` (un mot de passe à toi, pour que personne d'autre n'utilise ton serveur).
-4. Ouvre l'adresse `https://ancre-xxxx.onrender.com` sur l'iPad → ⚙︎ → colle le code.
-5. Safari → Partager → **Sur l'écran d'accueil**. L'appli s'ouvre ensuite même hors ligne.
+### 1. Mettre l'appli sur GitHub Pages
+1. Vide l'ancien contenu du repo (l'ancienne version avec `server.js`, `package.json`, `public/`… ne sert plus).
+2. Mets **tous ces fichiers à la racine** du repo.
+3. Repo → Settings → Pages → Branch `main`, dossier `/ (root)` → Save.
+4. Ouvre l'adresse `https://leogb-tech.github.io/<nom-du-repo>/` dans Safari.
 
-La formule gratuite se met en veille : la première ouverture du jour prend ~30 s.
+### 2. L'installer sur l'iPad
+Safari → bouton Partager → **Sur l'écran d'accueil**, puis ouvre Ancre **depuis l'icône**.
+(L'appli installée a son propre stockage : fais l'étape 3 depuis l'icône, pas dans Safari.)
+
+### 3. Le relais Cloudflare
+Un navigateur n'a pas le droit de lire le contenu d'un autre site : c'est ce qui donnait l'erreur 405.
+Le relais est un mini-programme gratuit (Cloudflare Workers, sans carte bancaire, 100 000 requêtes par jour) qui récupère les pages pour Ancre. Il ne stocke rien et n'obéit qu'à ton code privé.
+
+Dans l'appli : ⚙︎ → suis les 5 étapes.
+1. **Copier le code du relais** (il contient déjà ta clé privée).
+2. Crée un compte sur Cloudflare.
+3. **Workers & Pages** → **Create** → **Hello World** → **Deploy**.
+4. **Edit code** → efface tout → colle → **Deploy**.
+5. Colle l'adresse du Worker (`…workers.dev`) dans Ancre → **Tester et enregistrer**.
+
+Si l'interface Cloudflare a changé de nom, le principe reste : créer un Worker, remplacer tout son code par celui copié, le déployer.
 
 ## Utilisation
-
-- **Ajouter un site** en Wi-Fi → le téléchargement tourne sur le serveur (tu peux fermer l'appli) → il s'enregistre sur l'appareil à la réouverture.
-- Sommaire, recherche dans le texte, reprise de lecture, page précédente/suivante, thèmes clair/sépia/sombre, taille du texte.
-- Un lien vers une page non téléchargée l'indique clairement.
-
-## En local (PC)
-
-`npm install` puis `npm start` → http://localhost:47321
+- **Ajouter un site** en Wi-Fi, choisis le format. Garde l'appli ouverte pendant le téléchargement ; si tu la quittes, il reprend tout seul où il en était.
+- Sommaire dans l'ordre du site, recherche dans le texte, reprise de lecture, page précédente / suivante, thèmes clair / sépia / sombre, taille du texte.
+- Un lien vers une page non téléchargée l'indique au lieu de casser.
+- **Mettre à jour** retélécharge le site en gardant ta page de lecture.
 
 ## Limites
+- Mode lecture : la mise en page d'origine n'est pas conservée.
+- Les sites qui construisent leurs pages entièrement en JavaScript, qui demandent une connexion ou qui bloquent les robots peuvent ne rien donner (l'appli affiche alors la raison).
 
-Mode lecture : la mise en page d'origine n'est pas conservée. Les sites générés entièrement en JavaScript, derrière une connexion, ou protégés anti-robot peuvent ne rien renvoyer.
+## Fichiers
+`index.html` (l'appli), `readability.js` (extraction du texte, Mozilla, licence Apache 2.0 — voir `readability-LICENSE.md`), `relais.js` (modèle du relais, sans ta clé), `sw.js` + `manifest.webmanifest` + icônes (fonctionnement hors ligne).
